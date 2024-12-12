@@ -1,14 +1,69 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, StatusBar } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
 
 import "../global.css";
 
+// Telas de exemplo
+function HomeScreen() {
+  return (
+    <View className="flex-1 items-center justify-center bg-white">
+      <Text className="text-black">Início</Text>
+    </View>
+  );
+}
+
+function TimelineScreen() {
+  return (
+    <View className="flex-1 items-center justify-center bg-white">
+      <Text className="text-black">Linha do Tempo</Text>
+    </View>
+  );
+}
+
+function InfoScreen() {
+  return (
+    <View className="flex-1 items-center justify-center bg-white">
+      <Text className="text-black">Informações</Text>
+    </View>
+  );
+}
+
+const Tab = createBottomTabNavigator();
+
 export default function App() {
   return (
-    <View className="flex-1 h-full items-center justify-center bg-black">
-      <Text className='text-red-500'>Não ta funcionando!</Text>
-      <StatusBar style="auto" />
-    </View >
+    <>
+      {/* Configuração da StatusBar */}
+      <StatusBar barStyle="light-content" backgroundColor="#ffffff" />
+      
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+
+            // Definindo ícones para cada tela
+            if (route.name === 'Início') {
+              iconName = focused ? 'home' : 'home-outline';
+            } else if (route.name === 'Linha do Tempo') {
+              iconName = focused ? 'git-network' : 'git-network-outline';
+            } else if (route.name === 'Informações') {
+              iconName = focused ? 'information-circle' : 'information-circle-outline';
+            }
+
+            // Retorna o ícone correspondente
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: 'black',
+          tabBarInactiveTintColor: 'black',
+          headerShown: false
+        })}
+      >
+        <Tab.Screen name="Início" component={HomeScreen} />
+        <Tab.Screen name="Linha do Tempo" component={TimelineScreen} />
+        <Tab.Screen name="Informações" component={InfoScreen} />
+      </Tab.Navigator>
+    </>
   );
 }
