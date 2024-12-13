@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View, StatusBar } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import PostCard from '../../linha do tempo/postcard'; // Importa o componente
 
 import "../global.css";
 
@@ -16,9 +17,7 @@ function HomeScreen() {
 
 function TimelineScreen() {
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text className="text-black">Linha do Tempo</Text>
-    </View>
+    <PostCard /> // Substitui a tela pela lista de posts
   );
 }
 
@@ -61,7 +60,7 @@ export default function App() {
         })}
       >
         <Tab.Screen name="Início" component={HomeScreen} />
-        <Tab.Screen name="Linha do Tempo" component={TimelineScreen} />
+        <Tab.Screen name="Linha do Tempo" component={PostCard} />
         <Tab.Screen name="Informações" component={InfoScreen} />
       </Tab.Navigator>
     </>
