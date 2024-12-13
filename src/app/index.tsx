@@ -4,15 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 
 import "../global.css";
-
-// Telas de exemplo
-function HomeScreen() {
-  return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text className="text-black">Início</Text>
-    </View>
-  );
-}
+import HomeScreen from './home';
 
 function TimelineScreen() {
   return (
@@ -91,7 +83,7 @@ export default function App() {
     <>
       {/* Configuração da StatusBar */}
       <StatusBar barStyle="light-content" backgroundColor="#ffffff" />
-      
+
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
