@@ -37,8 +37,8 @@ function InfoScreen() {
         </TouchableOpacity>
       </View>
 
-       {/* Sessão 2: Serviços */}
-       <View className="bg-white p-4 rounded-lg shadow mb-4">
+      {/* Sessão 2: Serviços */}
+      <View className="bg-white p-4 rounded-lg shadow mb-4">
         <Text className="text-lg font-bold text-black mb-2">Central de Atendimento</Text>
         <TouchableOpacity className="py-2 border-b border-gray-200 flex-row items-center justify-between">
           <MaterialIcons name="phone" size={20} color="black" />
@@ -82,7 +82,7 @@ export default function App() {
   return (
     <>
       {/* Configuração da StatusBar */}
-      <StatusBar barStyle="light-content" backgroundColor="#ffffff" />
+      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
 
       <Tab.Navigator
         screenOptions={({ route }) => ({
@@ -101,8 +101,8 @@ export default function App() {
             // Retorna o ícone correspondente
             return <Ionicons name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: 'black',
-          tabBarInactiveTintColor: 'black',
+          tabBarActiveTintColor: '#04378b',
+          tabBarInactiveTintColor: '#6e99df',
           headerShown: false
         })}
       >
