@@ -17,7 +17,9 @@ function HomeScreen() {
 
 function TimelineScreen() {
   return (
+    <View>
     <PostCard /> // Substitui a tela pela lista de posts
+    </View>
   );
 }
 

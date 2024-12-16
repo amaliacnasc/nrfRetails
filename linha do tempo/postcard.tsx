@@ -9,10 +9,18 @@ import {
   Modal,
   TextInput,
   Button,
-  Alert
+  Alert,
+  ScrollView,
+  Pressable
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Feather, Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import { HeaderTimeline } from './header_timeline';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { HeaderPosts } from './header_posts';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+
+
 
 // Tipagem para os posts
 interface Post {
@@ -29,7 +37,7 @@ const PostCard: React.FC = () => {
       id: '1',
       title: 'Primeiro Post',
       details: 'Detalhes do primeiro post.',
-      image: 'https://via.placeholder.com/150',
+      image: 'https://s3-alpha-sig.figma.com/img/7653/5570/cebfc44fd8794b95275f69f7bcf9715a?Expires=1734912000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=Qnv0bs5VpbD~Zu0~2t1zHmqoSLFROO5xCNllcZk5R1Czbdx6a7iSRa24RC-H5j8B-Pe5YWekiGJsWF2ugnWk6z8TuvZrBf3dXVPOx9G6Jf3gDdvCPnZxFO3ivu~Fqq4tPJw-qqjplgD4fVc311RYkDHeKwy0DS0f-jZVYCEd2lMU13IDEsipaCI654vS8pnEWBnmDSXdNPVZMSowgpPs6uelnkWvVYLgDPj0VC0NRf3fkR6YexEIfzAtNqcsf7sXmnHKKh5sIZLEEd22ueScbqFuU-Hj8x7LbYaYurMLM7V-OFO5hR8ekdKAxK65iFrP-BSp84MiTF1iFojHAvEqjw__',
       liked: false,
     },
     {
@@ -39,6 +47,7 @@ const PostCard: React.FC = () => {
       liked: false,
     },
   ]);
+  
 
   const [modalVisible, setModalVisible] = useState(false);
   const [newPostTitle, setNewPostTitle] = useState('');
@@ -107,104 +116,319 @@ const PostCard: React.FC = () => {
     setNewPostImage(undefined);
   };
 
+
+
   return (
-    <View style={styles.container}>
-      <Button title="Criar Post" onPress={() => setModalVisible(true)} />
+    <ScrollView>
+    <HeaderTimeline />
+    
+
+    <Pressable onPress={() => setModalVisible(true)}> 
+                   <Text
+                   style={{
+                    position: 'relative',
+                    bottom: 50,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    alignSelf: 'center',
+                    backgroundColor: '#000',
+                    width: 150,
+                    padding: 3,
+                    borderRadius: 15,
+                    fontSize: 14,
+                    color: 'white'
+                   }}
+                   >
+                    +Adicionar Postagem
+                   </Text>
+                </Pressable>
 
       <FlatList
+        style={{
+          padding: 10,
+          display: 'flex'
+        }}
         data={posts}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.title}>{item.title}</Text>
-            <Text style={styles.details}>{item.details}</Text>
-            {item.image && <Image source={{ uri: item.image }} style={styles.image} />}
-            <TouchableOpacity onPress={() => toggleLike(item.id)}>
-              <Ionicons
-                name={item.liked ? 'heart' : 'heart-outline'}
-                size={24}
-                color={item.liked ? 'red' : 'gray'}
-              />
-            </TouchableOpacity>
-          </View>
+          <View 
+          className='bg-white rounded-md'
+
+          style={{
+            marginBottom: 20,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 3,
+            elevation: 2,
+            
+          }}
+          
+          >
+            {item.image
+             &&
+              <Image source={{ uri: item.image }}
+
+               style={{
+                width: 'auto',
+                height: 480,
+               }}
+               />}
+            <View
+            className='flex flex-col items-start'
+
+            style={{
+              gap: 0,
+              padding: 8,
+              flexDirection: 'column'
+            }}
+            
+            >
+            <Text 
+            className='text-gray-700'
+            style={{
+              color: "#334155",
+              fontWeight: 'bold',
+              fontSize: 16,
+              lineHeight: 24
+            }}
+
+            >
+
+              {item.title}
+              
+              </Text>
+
+            <View
+            className='flex flex-row self-stretch'
+            style={{
+              gap: 10,
+              padding: 8,
+            }}
+
+            >
+              <Text 
+              style={{
+                fontSize: 16,
+                fontWeight: 400,
+                lineHeight: 24
+              }}
+              >
+                {item.details}
+                
+                </Text>
+
+            </View>
+              <View
+              className=' w-24 h-16'
+              style={{
+                padding: 8,
+                gap: 8,
+                display: 'flex',
+                flexShrink: 0,
+                flexDirection: 'row'
+                
+              }}
+              >
+                <TouchableOpacity 
+                onPress={() => toggleLike(item.id)}
+                className='flex w-3 h-3'
+                >
+
+                  <Ionicons
+                    name={item.liked ? 'heart' : 'heart-outline'}
+                    size={24}
+                    color={item.liked ? 'red' : 'gray'}
+                  />
+                </TouchableOpacity>
+                <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: 400,
+                  lineHeight: 24
+                }}
+                >
+                  Curtir
+                </Text>
+              </View>
+            </View>
+            </View>
         )}
       />
 
       <Modal visible={modalVisible} animationType="slide">
-        <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Criar Novo Post</Text>
+        <View>
+          
+        <HeaderPosts />
+
+        <Pressable onPress={() => setModalVisible(false)} >
+        <AntDesign 
+          name="left" 
+          size={24} 
+          color="#054FC7" 
+          style={{
+            position: 'relative',
+            left: 80,
+            bottom: 100
+          }}
+          />
+          </Pressable>
+        
+      <View
+      
+      style={{
+      display: 'flex',
+      padding: 10
+      }}
+      >
+        <Text
+        style = {{
+          fontWeight: 'bold',
+          fontSize: 15,
+          shadowColor: '#000',
+            
+        }}
+        >Titulo</Text>
           <TextInput
-            style={styles.input}
-            placeholder="Título"
+            placeholder="Insira o titulo"
             value={newPostTitle}
             onChangeText={setNewPostTitle}
+            style={{
+              marginTop: 6,
+              padding: 5,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.5,
+              shadowRadius: 4,
+              elevation: 2,
+              borderColor: '#000',
+              color: '#DBEAFE'
+            }}
           />
+        </View>
+
+            <View 
+              style={{
+                display: 'flex',
+                padding: 10
+            }}>
+              <Text 
+              style={{
+                fontWeight: 'bold',
+                fontSize: 15,
+                shadowColor: '#000',
+              }}
+              >
+                Detalhes
+              </Text>
+
           <TextInput
-            style={styles.input}
-            placeholder="Detalhes"
+            placeholder="Insira os detalhes"
             value={newPostDetails}
             onChangeText={setNewPostDetails}
+            style={{
+              marginTop: 6,
+              padding: 5,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.5,
+              shadowRadius: 4,
+              elevation: 2,
+              color: '#DBEAFE'
+            }}
           />
-          {newPostImage && <Image source={{ uri: newPostImage }} style={styles.image} />}
-          <Button title="Abrir Galeria" onPress={openImagePicker} />
-          <Button title="Abrir Câmera" onPress={openCamera} />
-          <Button title="Postar" onPress={createPost} />
-          <Button title="Cancelar" onPress={() => setModalVisible(false)} />
+
+
+          </View>
+          {newPostImage && <Image source={{ uri: newPostImage }} />}
+            
+            <View 
+            style={{
+              marginTop: 29,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+            >
+
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: 'bold',
+              }}
+            >Inserir Imagem:</Text>
+
+            </View>
+
+            <View 
+              style={{
+                padding: 8,
+                flex: 1,
+                flexShrink: 0,
+                flexDirection: 'row',
+                justifyContent: 'space-evenly'
+              }}
+            >
+
+              <Pressable onPress={openImagePicker} >
+                <MaterialCommunityIcons 
+                name='view-gallery-outline'
+                size={30}
+                style={{
+                  color: '#60a5fa',
+                  position:'relative',
+                  left: 7
+                }}
+                />
+                <Text
+                >
+                  Galeria
+                </Text>
+
+              </Pressable>
+
+              <Pressable onPress={openCamera} > 
+                <Feather 
+                name='camera'
+                size={30}
+                style={{
+                  color: '#60a5fa',
+                  position:'relative',
+                  left: 11
+                }}
+                />
+                <Text
+                style={{
+                }}
+                >Câmera</Text>
+              </Pressable>
+          </View>
+
+          <Pressable onPress={createPost} >
+            <Text
+            style={{
+              marginTop: 20,
+              justifyContent: 'center',
+              alignItems: 'center',
+              textAlign: 'center',
+              alignSelf: 'center',
+              backgroundColor: '#000',
+              width: 150,
+              padding: 3,
+              borderRadius: 15,
+              fontSize: 14,
+              color: 'white'
+            }}
+            >Postar</Text>
+
+          </Pressable>
+
+          
+
         </View>
       </Modal>
-    </View>
+    </ScrollView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-  },
-  card: {
-    backgroundColor: '#fff',
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  details: {
-    fontSize: 14,
-    marginVertical: 5,
-  },
-  image: {
-    width: '100%',
-    height: 200,
-    borderRadius: 5,
-    marginVertical: 10,
-  },
-  modalContent: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 20,
-    marginBottom: 20,
-  },
-  input: {
-    width: '100%',
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  },
-});
 
 export default PostCard;
