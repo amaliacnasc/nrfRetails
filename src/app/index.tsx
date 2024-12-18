@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 import { Text, View, StatusBar, TouchableOpacity, ScrollView, Image, Modal, TextInput } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import PostCard from '../../linha do tempo/postcard'; // Importa o componente
 
 import "../global.css";
 import HomeScreen from './home';
 
 function TimelineScreen() {
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text className="text-black">Linha do Tempo</Text>
+    <View>
+    <PostCard /> // Substitui a tela pela lista de posts
     </View>
   );
 }
@@ -189,7 +190,7 @@ export default function App() {
         })}
       >
         <Tab.Screen name="Início" component={HomeScreen} />
-        <Tab.Screen name="Linha do Tempo" component={TimelineScreen} />
+        <Tab.Screen name="Linha do Tempo" component={PostCard} />
         <Tab.Screen name="Informações" component={InfoScreen} />
       </Tab.Navigator>
     </>
