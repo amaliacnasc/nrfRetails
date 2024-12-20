@@ -23,18 +23,18 @@ const InfoScreen: React.FC = () => {
     contato: ''
   });
 
-  // Função para buscar os dados do usuário
+  // Function to fetch user data
   const fetchUserData = async () => {
     try {
-      const response = await axios.get('<URL_DO_BACKEND>/usuario'); // Substitua pela URL da API
+      const response = await axios.get('<URL_DO_BACKEND>/usuario'); // Replace with your backend URL
       const { nome, email } = response.data;
       setFormData((prevData) => ({ ...prevData, nome, email }));
     } catch (error) {
-      console.error('Erro ao buscar dados do usuário:', error);
+      console.error('Error fetching user data:', error);
     }
   };
 
-  // UseEffect para carregar os dados quando a tela abrir
+  // useEffect to load data when the screen opens
   useEffect(() => {
     fetchUserData();
   }, []);
@@ -45,15 +45,15 @@ const InfoScreen: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      await axios.put('<URL_DO_BACKEND>/usuario', formData); // Substitua pela URL da API
-      console.log('Dados do Perfil atualizados:', formData);
+      await axios.put('<URL_DO_BACKEND>/usuario', formData); // Replace with your backend URL
+      console.log('Profile data updated:', formData);
       setModalVisible(false);
     } catch (error) {
-      console.error('Erro ao salvar dados do usuário:', error);
+      console.error('Error saving user data:', error);
     }
   };
 
-  // Modal de Contato com Coordenadores
+  // Modal components
   const ContactModal = () => (
     <Modal
       animationType="slide"
@@ -65,7 +65,7 @@ const InfoScreen: React.FC = () => {
         <View className="bg-white p-6 rounded-lg w-80">
           <Text className="text-lg font-bold mb-4">Contato com Coordenadores</Text>
           <FlatList
-            data={[{ name: 'João Silva', phone: '123-456-789' }, { name: 'Maria Souza', phone: '987-654-321' }]} // Lista estática
+            data={[{ name: 'João Silva', phone: '123-456-789' }, { name: 'Maria Souza', phone: '987-654-321' }]} // Static list
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <View className="flex-row items-center justify-between py-2 border-b border-gray-200">
@@ -85,7 +85,6 @@ const InfoScreen: React.FC = () => {
     </Modal>
   );
 
-  // Modal de Participantes
   const ParticipantsModal = () => (
     <Modal
       animationType="slide"
@@ -97,7 +96,7 @@ const InfoScreen: React.FC = () => {
         <View className="bg-white p-6 rounded-lg w-80">
           <Text className="text-lg font-bold mb-4">Participantes</Text>
           <FlatList
-            data={[{ name: 'Ana Beatriz', cargo: 'Líder', contato: '111-222-333' }, { name: 'Carlos Oliveira', cargo: 'Desenvolvedor', contato: '444-555-666' }]} // Lista estática
+            data={[{ name: 'Ana Beatriz', cargo: 'Líder', contato: '111-222-333' }, { name: 'Carlos Oliveira', cargo: 'Desenvolvedor', contato: '444-555-666' }]} // Static list
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <View className="flex-row items-center justify-between py-2 border-b border-gray-200">
@@ -120,7 +119,6 @@ const InfoScreen: React.FC = () => {
     </Modal>
   );
 
-  // Modal de Tradutor
   const TranslatorModal = () => (
     <Modal
       animationType="slide"
@@ -132,7 +130,7 @@ const InfoScreen: React.FC = () => {
         <View className="bg-white p-6 rounded-lg w-80">
           <Text className="text-lg font-bold mb-4">Tradutor</Text>
           <TouchableOpacity
-            onPress={() => Linking.openURL('https://translate.google.com')} // Link para abrir o Google Tradutor
+            onPress={() => Linking.openURL('https://translate.google.com')} // Link to open Google Translate
             className="mt-4 bg-blue-500 p-2 rounded-lg"
           >
             <Text className="text-white text-center">Abrir Google Tradutor</Text>
@@ -148,7 +146,6 @@ const InfoScreen: React.FC = () => {
     </Modal>
   );
 
-  // Modal de Hospedagem e Transporte
   const TravelGuideModal = () => (
     <Modal
       animationType="slide"
@@ -157,36 +154,36 @@ const InfoScreen: React.FC = () => {
       onRequestClose={() => setModalTravelGuideVisible(false)}
     >
       <View className="flex-1 justify-center items-center bg-gray-500 bg-opacity-50">
-      <View className="bg-white p-6 rounded-lg w-80">
-        <Text className="text-lg font-bold mb-4">Hospedagem e Transporte</Text>
-        <View className="flex-row justify-around mt-4">
-          <TouchableOpacity className="items-center">
-            <MaterialIcons name="flight" size={30} color="black" />
-            <Text className="text-center mt-2">Voo</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="items-center">
-            <MaterialIcons name="hotel" size={30} color="black" />
-            <Text className="text-center mt-2">Hospedagem</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="items-center">
-            <MaterialIcons name="directions-car" size={30} color="black" />
-            <Text className="text-center mt-2">Turismo</Text>
+        <View className="bg-white p-6 rounded-lg w-80">
+          <Text className="text-lg font-bold mb-4">Hospedagem e Transporte</Text>
+          <View className="flex-row justify-around mt-4">
+            <TouchableOpacity className="items-center">
+              <MaterialIcons name="flight" size={30} color="black" />
+              <Text className="text-center mt-2">Voo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity className="items-center">
+              <MaterialIcons name="hotel" size={30} color="black" />
+              <Text className="text-center mt-2">Hospedagem</Text>
+            </TouchableOpacity>
+            <TouchableOpacity className="items-center">
+              <MaterialIcons name="directions-car" size={30} color="black" />
+              <Text className="text-center mt-2">Turismo</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            onPress={() => setModalTravelGuideVisible(false)}
+            className="mt-4 bg-blue-500 p-2 rounded-lg"
+          >
+            <Text className="text-white text-center">Fechar</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={() => setModalTravelGuideVisible(false)}
-          className="mt-4 bg-blue-500 p-2 rounded-lg"
-        >
-          <Text className="text-white text-center">Fechar</Text>
-        </TouchableOpacity>
       </View>
-    </View>
     </Modal>
   );
 
   return (
     <ScrollView className="flex-1 bg-gray-100 px-4">
-      {/* Título Informações */}
+      {/* Title Information */}
       <View className="p-4">
         <Text className="text-2xl font-bold text-black text-center">Informações</Text>
         <View className="border-b border-gray-300 mt-4" />
@@ -198,10 +195,9 @@ const InfoScreen: React.FC = () => {
         <Text className="text-sm text-gray-500">{formData.email}</Text>
       </View>
 
-      {/* Sessão 1: Minha Conta */}
+      {/* Section 1: My Account */}
       <View className="bg-white p-4 rounded-lg shadow mb-4">
         <Text className="text-lg font-bold text-black mb-2">Minha Conta</Text>
-        {/* Informações editáveis via modal */}
         <TouchableOpacity onPress={() => setModalVisible(true)} className="py-2 border-b border-gray-200 flex-row items-center justify-between">
           <MaterialIcons name="person" size={20} color="black" />
           <Text className="text-black ml-2">Editar Perfil</Text>
@@ -209,12 +205,12 @@ const InfoScreen: React.FC = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Sessão 2: Serviços */}
+      {/* Section 2: Services */}
       <View className="bg-white p-4 rounded-lg shadow mb-4">
         <Text className="text-lg font-bold text-black mb-2">Central de Atendimento</Text>
         <TouchableOpacity onPress={() => setModalContactVisible(true)} className="py-2 border-b border-gray-200 flex-row items-center justify-between">
           <MaterialIcons name="phone" size={20} color="black" />
-          <Text className="text-black ml-2">Contato com os Coordenadores</Text>
+          <Text className="text-black ml-2">Contatos dos Coordenadores</Text>
           <MaterialIcons name="keyboard-arrow-right" size={20} color="black" />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setModalParticipantsVisible(true)} className="py-2 border-b border-gray-200 flex-row items-center justify-between">
@@ -227,14 +223,9 @@ const InfoScreen: React.FC = () => {
           <Text className="text-black ml-2">Tradutor</Text>
           <MaterialIcons name="keyboard-arrow-right" size={20} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setModalTravelGuideVisible(true)} className="py-2 border-b border-gray-200 flex-row items-center justify-between">
-          <MaterialIcons name="hotel" size={20} color="black" />
-          <Text className="text-black ml-2">Hospedagem e Transporte</Text>
-          <MaterialIcons name="keyboard-arrow-right" size={20} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity className="py-2 flex-row items-center justify-between">
-          <MaterialIcons name="book" size={20} color="black" />
-          <Text className="text-black ml-2">Cartilha do Viajante</Text>
+        <TouchableOpacity onPress={() => setModalTravelGuideVisible(true)} className="py-2 flex-row items-center justify-between">
+          <MaterialIcons name="map" size={20} color="black" />
+          <Text className="text-black ml-2">Guia de Viagem</Text>
           <MaterialIcons name="keyboard-arrow-right" size={20} color="black" />
         </TouchableOpacity>
       </View>
@@ -248,6 +239,71 @@ const InfoScreen: React.FC = () => {
       <ParticipantsModal />
       <TranslatorModal />
       <TravelGuideModal />
+
+      {/* Edit Profile Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View className="flex-1 justify-center items-center bg-gray-500 bg-opacity-50">
+          <View className="bg-white p-6 rounded-lg w-80">
+            <Text className="text-sm font-bold text-gray-700 mb-1">Nome</Text>
+              <TextInput
+                placeholder="Nome"
+                className="border border-gray-300 p-2 mb-4 rounded"
+                value={formData.nome}
+                onChangeText={(text) => handleInputChange('nome', text)}
+              />
+  
+              <Text className="text-sm font-bold text-gray-700 mb-1">E-mail</Text>
+              <TextInput
+                placeholder="E-mail"
+                className="border border-gray-300 p-2 mb-4 rounded"
+                value={formData.email}
+                onChangeText={(text) => handleInputChange('email', text)}
+              />
+  
+              <Text className="text-sm font-bold text-gray-700 mb-1">Empresa</Text>
+              <TextInput
+                placeholder="Empresa"
+                className="border border-gray-300 p-2 mb-4 rounded"
+                value={formData.empresa}
+                onChangeText={(text) => handleInputChange('empresa', text)}
+              />
+  
+              <Text className="text-sm font-bold text-gray-700 mb-1">Cargo</Text>
+              <TextInput
+                placeholder="Cargo"
+                className="border border-gray-300 p-2 mb-4 rounded"
+                value={formData.cargo}
+                onChangeText={(text) => handleInputChange('cargo', text)}
+              />
+  
+              <Text className="text-sm font-bold text-gray-700 mb-1">Contato</Text>
+              <TextInput
+                placeholder="Contato"
+                className="border border-gray-300 p-2 mb-4 rounded"
+                value={formData.contato}
+                onChangeText={(text) => handleInputChange('contato', text)}
+              />
+  
+              <TouchableOpacity
+                onPress={handleSave}
+                className="bg-blue-500 p-2 rounded-lg mt-4"
+              >
+                <Text className="text-white text-center">Salvar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
+                className="mt-2"
+              >
+                <Text className="text-center text-blue-500">Cancelar</Text>
+              </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
