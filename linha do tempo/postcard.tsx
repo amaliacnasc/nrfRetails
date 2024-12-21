@@ -39,7 +39,7 @@ interface Post {
   }[];
 }
 
-const API_URL = 'http://localhost:8080/appevento';
+
 
 const PostCard: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -54,7 +54,7 @@ const PostCard: React.FC = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get(`${API_URL}/posts`);
+      const response = await axios.get(`http://localhost:8080/appevento/posts`);
       setPosts(response.data);
     } catch (error) {
       Alert.alert('Erro', 'Não foi possível carregar os posts.');
@@ -108,7 +108,7 @@ const PostCard: React.FC = () => {
     };
 
     try {
-      const response = await axios.post(`${API_URL}/posts`, newPost);
+      const response = await axios.post(`http://localhost:8080/appevento/posts`, newPost);
       setPosts((prevPosts) => [response.data, ...prevPosts]);
       setModalVisible(false);
       setNewPostTitle('');
