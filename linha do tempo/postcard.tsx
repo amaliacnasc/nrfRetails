@@ -1,65 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   FlatList,
   Image,
   TouchableOpacity,
   Modal,
   TextInput,
-  Button,
   Alert,
-  ScrollView,
   Pressable
 } from 'react-native';
-import { Feather, Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { HeaderTimeline } from './header_timeline';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { HeaderPosts } from './header_posts';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-
-
+import axios from 'axios';
 
 // Tipagem para os posts
 interface Post {
-  id: string;
-  title: string;
-  details: string;
-  image?: string;
-  liked: boolean;
+  idPost: number;
+  imageUrl: string;
+  description: string;
+  participant: {
+    idParticipant: number;
+    name: string;
+    email: string;
+    companyName: string;
+  };
+  likes: {
+    idLike: number;
+    participant: {
+      idParticipant: number;
+      name: string;
+      email: string;
+      companyName: string;
+    };
+  }[];
 }
 
-const PostCard: React.FC = () => {
-  const [posts, setPosts] = useState<Post[]>([
-    {
-      id: '1',
-      title: 'Primeiro Post',
-      details: 'Detalhes do primeiro post.',
-      image: 'https://s3-alpha-sig.figma.com/img/7653/5570/cebfc44fd8794b95275f69f7bcf9715a?Expires=1734912000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=Qnv0bs5VpbD~Zu0~2t1zHmqoSLFROO5xCNllcZk5R1Czbdx6a7iSRa24RC-H5j8B-Pe5YWekiGJsWF2ugnWk6z8TuvZrBf3dXVPOx9G6Jf3gDdvCPnZxFO3ivu~Fqq4tPJw-qqjplgD4fVc311RYkDHeKwy0DS0f-jZVYCEd2lMU13IDEsipaCI654vS8pnEWBnmDSXdNPVZMSowgpPs6uelnkWvVYLgDPj0VC0NRf3fkR6YexEIfzAtNqcsf7sXmnHKKh5sIZLEEd22ueScbqFuU-Hj8x7LbYaYurMLM7V-OFO5hR8ekdKAxK65iFrP-BSp84MiTF1iFojHAvEqjw__',
-      liked: false,
-    },
-    {
-      id: '2',
-      title: 'Segundo Post',
-      details: 'Detalhes do segundo post.',
-      liked: false,
-    },
-  ]);
-  
+const API_URL = 'http://localhost:8080/appevento';
 
+const PostCard: React.FC = () => {
+  const [posts, setPosts] = useState<Post[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [newPostTitle, setNewPostTitle] = useState('');
   const [newPostDetails, setNewPostDetails] = useState('');
   const [newPostImage, setNewPostImage] = useState<string | undefined>(undefined);
 
-  const toggleLike = (id: string) => {
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post.id === id ? { ...post, liked: !post.liked } : post
-      )
-    );
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/posts`);
+      setPosts(response.data);
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível carregar os posts.');
+      console.error(error);
+    }
   };
 
   const openImagePicker = async () => {
@@ -95,340 +95,190 @@ const PostCard: React.FC = () => {
     }
   };
 
-  const createPost = () => {
+  const createPost = async () => {
     if (!newPostTitle || !newPostDetails) {
       Alert.alert('Erro', 'Preencha todos os campos antes de postar.');
       return;
     }
 
-    const newPost: Post = {
-      id: Date.now().toString(),
+    const newPost = {
       title: newPostTitle,
       details: newPostDetails,
       image: newPostImage,
-      liked: false,
     };
 
-    setPosts((prevPosts) => [newPost, ...prevPosts]);
-    setModalVisible(false);
-    setNewPostTitle('');
-    setNewPostDetails('');
-    setNewPostImage(undefined);
+    try {
+      const response = await axios.post(`${API_URL}/posts`, newPost);
+      setPosts((prevPosts) => [response.data, ...prevPosts]);
+      setModalVisible(false);
+      setNewPostTitle('');
+      setNewPostDetails('');
+      setNewPostImage(undefined);
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível criar o post.');
+      console.error(error);
+    }
   };
 
-
-
   return (
-    <ScrollView>
-    <HeaderTimeline />
-    
+    <View style={{ flex: 1 }}>
+      <HeaderTimeline />
 
-    <Pressable onPress={() => setModalVisible(true)}> 
-                   <Text
-                   style={{
-                    position: 'relative',
-                    bottom: 50,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                    alignSelf: 'center',
-                    backgroundColor: '#000',
-                    width: 150,
-                    padding: 3,
-                    borderRadius: 15,
-                    fontSize: 14,
-                    color: 'white'
-                   }}
-                   >
-                    +Adicionar Postagem
-                   </Text>
-                </Pressable>
+      <Pressable onPress={() => setModalVisible(true)}>
+        <Text
+          style={{
+            position: 'relative',
+            bottom: 50,
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center',
+            alignSelf: 'center',
+            backgroundColor: '#000',
+            width: 150,
+            padding: 3,
+            borderRadius: 15,
+            fontSize: 14,
+            color: 'white',
+          }}
+        >
+          +Adicionar Postagem
+        </Text>
+      </Pressable>
 
       <FlatList
         style={{
           padding: 10,
-          display: 'flex'
         }}
         data={posts}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.idPost.toString()}
         renderItem={({ item }) => (
-          <View 
-          className='bg-white rounded-md'
-
-          style={{
-            marginBottom: 20,
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.1,
-            shadowRadius: 3,
-            elevation: 2,
-            
-          }}
-          
+          <View
+            style={{
+              marginBottom: 20,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 3,
+              elevation: 2,
+              backgroundColor: 'white',
+              borderRadius: 8,
+              overflow: 'hidden',
+            }}
           >
-            {item.image
-             &&
-              <Image source={{ uri: item.image }}
-
-               style={{
-                width: 'auto',
-                height: 480,
-               }}
-               />}
-            <View
-            className='flex flex-col items-start'
-
-            style={{
-              gap: 0,
-              padding: 8,
-              flexDirection: 'column'
-            }}
-            
-            >
-            <Text 
-            className='text-gray-700'
-            style={{
-              color: "#334155",
-              fontWeight: 'bold',
-              fontSize: 16,
-              lineHeight: 24
-            }}
-
-            >
-
-              {item.title}
-              
-              </Text>
-
-            <View
-            className='flex flex-row self-stretch'
-            style={{
-              gap: 10,
-              padding: 8,
-            }}
-
-            >
-              <Text 
-              style={{
-                fontSize: 16,
-                fontWeight: 400,
-                lineHeight: 24
-              }}
-              >
-                {item.details}
-                
-                </Text>
-
-            </View>
-              <View
-              className=' w-24 h-16'
-              style={{
-                padding: 8,
-                gap: 8,
-                display: 'flex',
-                flexShrink: 0,
-                flexDirection: 'row'
-                
-              }}
-              >
-                <TouchableOpacity 
-                onPress={() => toggleLike(item.id)}
-                className='flex w-3 h-3'
-                >
-
-                  <Ionicons
-                    name={item.liked ? 'heart' : 'heart-outline'}
-                    size={24}
-                    color={item.liked ? 'red' : 'gray'}
-                  />
-                </TouchableOpacity>
-                <Text
+            {item.imageUrl && (
+              <Image
+                source={{ uri: item.imageUrl }}
                 style={{
-                  fontSize: 16,
-                  fontWeight: 400,
-                  lineHeight: 24
+                  width: '100%',
+                  height: 200,
                 }}
-                >
-                  Curtir
-                </Text>
-              </View>
+              />
+            )}
+            <View style={{ padding: 16 }}>
+              <Text
+                style={{
+                  color: '#334155',
+                  fontWeight: 'bold',
+                  fontSize: 16,
+                  marginBottom: 8,
+                }}
+              >
+                {item.description}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: '#64748b',
+                }}
+              >
+                {`Autor: ${item.participant.name} (${item.participant.companyName})`}
+              </Text>
             </View>
-            </View>
+          </View>
         )}
       />
 
       <Modal visible={modalVisible} animationType="slide">
-        <View>
-          
-        <HeaderPosts />
+        <View style={{ flex: 1, padding: 16 }}>
+          <HeaderPosts />
 
-        <Pressable onPress={() => setModalVisible(false)} >
-        <AntDesign 
-          name="left" 
-          size={24} 
-          color="#054FC7" 
-          style={{
-            position: 'relative',
-            left: 80,
-            bottom: 100
-          }}
-          />
+          <Pressable onPress={() => setModalVisible(false)}>
+            <AntDesign
+              name="left"
+              size={24}
+              color="#054FC7"
+              style={{ marginBottom: 16 }}
+            />
           </Pressable>
-        
-      <View
-      
-      style={{
-      display: 'flex',
-      padding: 10
-      }}
-      >
-        <Text
-        style = {{
-          fontWeight: 'bold',
-          fontSize: 15,
-          shadowColor: '#000',
-            
-        }}
-        >Titulo</Text>
-          <TextInput
-            placeholder="Insira o titulo"
-            value={newPostTitle}
-            onChangeText={setNewPostTitle}
-            style={{
-              marginTop: 6,
-              padding: 5,
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.5,
-              shadowRadius: 4,
-              elevation: 2,
-              borderColor: '#000',
-              color: '#DBEAFE'
-            }}
-          />
-        </View>
 
-            <View 
+          <View style={{ marginBottom: 16 }}>
+            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Titulo</Text>
+            <TextInput
+              placeholder="Insira o titulo"
+              value={newPostTitle}
+              onChangeText={setNewPostTitle}
               style={{
-                display: 'flex',
-                padding: 10
-            }}>
-              <Text 
-              style={{
-                fontWeight: 'bold',
-                fontSize: 15,
-                shadowColor: '#000',
-              }}
-              >
-                Detalhes
-              </Text>
-
-          <TextInput
-            placeholder="Insira os detalhes"
-            value={newPostDetails}
-            onChangeText={setNewPostDetails}
-            style={{
-              marginTop: 6,
-              padding: 5,
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.5,
-              shadowRadius: 4,
-              elevation: 2,
-              color: '#DBEAFE'
-            }}
-          />
-
-
-          </View>
-          {newPostImage && <Image source={{ uri: newPostImage }} />}
-            
-            <View 
-            style={{
-              marginTop: 29,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-            >
-
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: 'bold',
-              }}
-            >Inserir Imagem:</Text>
-
-            </View>
-
-            <View 
-              style={{
+                marginTop: 8,
                 padding: 8,
-                flex: 1,
-                flexShrink: 0,
-                flexDirection: 'row',
-                justifyContent: 'space-evenly'
+                borderWidth: 1,
+                borderColor: '#d1d5db',
+                borderRadius: 4,
+                backgroundColor: '#f9fafb',
               }}
-            >
-
-              <Pressable onPress={openImagePicker} >
-                <MaterialCommunityIcons 
-                name='view-gallery-outline'
-                size={30}
-                style={{
-                  color: '#60a5fa',
-                  position:'relative',
-                  left: 7
-                }}
-                />
-                <Text
-                >
-                  Galeria
-                </Text>
-
-              </Pressable>
-
-              <Pressable onPress={openCamera} > 
-                <Feather 
-                name='camera'
-                size={30}
-                style={{
-                  color: '#60a5fa',
-                  position:'relative',
-                  left: 11
-                }}
-                />
-                <Text
-                style={{
-                }}
-                >Câmera</Text>
-              </Pressable>
+            />
           </View>
 
-          <Pressable onPress={createPost} >
-            <Text
+          <View style={{ marginBottom: 16 }}>
+            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Detalhes</Text>
+            <TextInput
+              placeholder="Insira os detalhes"
+              value={newPostDetails}
+              onChangeText={setNewPostDetails}
+              style={{
+                marginTop: 8,
+                padding: 8,
+                borderWidth: 1,
+                borderColor: '#d1d5db',
+                borderRadius: 4,
+                backgroundColor: '#f9fafb',
+              }}
+            />
+          </View>
+
+          {newPostImage && (
+            <Image
+              source={{ uri: newPostImage }}
+              style={{ width: '100%', height: 200, marginBottom: 16 }}
+            />
+          )}
+
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16 }}>
+            <Pressable onPress={openImagePicker} style={{ alignItems: 'center' }}>
+              <MaterialCommunityIcons name="view-gallery-outline" size={32} color="#60a5fa" />
+              <Text>Galeria</Text>
+            </Pressable>
+
+            <Pressable onPress={openCamera} style={{ alignItems: 'center' }}>
+              <MaterialCommunityIcons name="camera-outline" size={32} color="#60a5fa" />
+              <Text>Câmera</Text>
+            </Pressable>
+          </View>
+
+          <Pressable
+            onPress={createPost}
             style={{
-              marginTop: 20,
-              justifyContent: 'center',
-              alignItems: 'center',
-              textAlign: 'center',
-              alignSelf: 'center',
               backgroundColor: '#000',
-              width: 150,
-              padding: 3,
-              borderRadius: 15,
-              fontSize: 14,
-              color: 'white'
+              padding: 12,
+              borderRadius: 8,
+              alignItems: 'center',
             }}
-            >Postar</Text>
-
+          >
+            <Text style={{ color: '#fff', fontWeight: 'bold' }}>Postar</Text>
           </Pressable>
-
-          
-
         </View>
       </Modal>
-    </ScrollView>
+    </View>
   );
 };
-
 
 export default PostCard;
