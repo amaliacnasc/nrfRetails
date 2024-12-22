@@ -3,6 +3,7 @@ import { View, Text, TextInput, Image, Modal, Alert, Pressable } from 'react-nat
 import * as ImagePicker from 'expo-image-picker';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createPost } from '@/services/postService';
 import { Post } from '@/interfaces/postInterface';
 
@@ -56,12 +57,23 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
       Alert.alert('Erro', 'Preencha todos os campos antes de postar.');
       return;
     }
-    const newPost = {
-      idParticipant: 1,
-      imageUrl,
-      description,
-    };
+
     try {
+      const storedParticipant = await AsyncStorage.getItem('participant');
+      if (!storedParticipant) {
+        Alert.alert('Erro', 'Usuário não encontrado. Faça login novamente.');
+        return;
+      }
+
+      const participant = JSON.parse(storedParticipant);
+      const idParticipant = participant.idParticipant;
+
+      const newPost = {
+        idParticipant,
+        imageUrl,
+        description,
+      };
+
       const createdPost = await createPost(newPost);
       setPosts((prevPosts) => [createdPost, ...prevPosts]);
       setModalVisible(false);

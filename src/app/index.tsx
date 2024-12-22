@@ -1,12 +1,15 @@
-import TabNavigator from "@/navigators/TabNavigator";
 import React from "react";
-import { StatusBar } from "react-native";
+import { createStackNavigator } from "@react-navigation/stack";
+import LoginScreen from "@/screens/LoginScreen";
+import TabNavigator from "@/navigators/TabNavigator";
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <>
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
-      <TabNavigator />
-    </>
+    <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="TabNavigator" component={TabNavigator} />
+    </Stack.Navigator>
   );
 }

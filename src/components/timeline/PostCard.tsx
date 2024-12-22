@@ -1,34 +1,58 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, Pressable, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Post } from '@/interfaces/postInterface';
 import { AntDesign } from '@expo/vector-icons';
 import { createLike } from '@/services/likeService';
 
 interface PostCardProps {
   post: Post;
-  userId: number; // ID do usuário que está curtindo
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post, userId }) => {
+const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const [likes, setLikes] = useState<number>(
     Array.isArray(post.likes) ? post.likes.length : post.likes || 0
   );
   const [liked, setLiked] = useState<boolean>(false);
+  const [idParticipant, setIdParticipant] = useState<number | null>(null);
 
   useEffect(() => {
-    // Verifica se o usuário logado já curtiu o post
-    if (Array.isArray(post.likes) && post.likes.some((like) => like.participant?.idParticipant === userId)) {
+    const fetchParticipantId = async () => {
+      try {
+        const storedParticipant = await AsyncStorage.getItem('participant');
+        if (storedParticipant) {
+          const participant = JSON.parse(storedParticipant);
+          setIdParticipant(participant.idParticipant);
+        }
+      } catch (error) {
+        Alert.alert("Erro", "Não foi possível recuperar o ID do participante.");
+      }
+    };
+
+    fetchParticipantId();
+  }, []);
+
+  useEffect(() => {
+    if (
+      idParticipant &&
+      Array.isArray(post.likes) &&
+      post.likes.some((like) => like.participant?.idParticipant === idParticipant)
+    ) {
       setLiked(true);
     }
-  }, [post.likes, userId]);
+  }, [post.likes, idParticipant]);
 
   const handleLike = async () => {
+    if (!idParticipant) {
+      Alert.alert("Erro", "ID do participante não encontrado.");
+      return;
+    }
+
     try {
       if (!liked) {
-        await createLike({ idPost: post.idPost, idParticipant: userId });
+        await createLike({ idPost: post.idPost, idParticipant });
         setLikes((prev) => prev + 1);
       } else {
-        // Aqui você pode adicionar a lógica para remover o like, se necessário
         setLikes((prev) => prev - 1);
       }
       setLiked(!liked);

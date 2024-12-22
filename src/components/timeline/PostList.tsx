@@ -51,7 +51,7 @@ const PostList: React.FC<FetchPostsProps> = ({ posts, setPosts }) => {
       className="p-2"
       data={posts}
       keyExtractor={(item) => item.idPost.toString()}
-      renderItem={({ item }) => <PostCard post={item} userId={1} />}
+      renderItem={({ item }) => <PostCard post={item} />}
     />
   );
 };

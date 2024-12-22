@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { Feather } from '@expo/vector-icons'; 
-import EventCard from '../eventCard/EventCard';
+import EventCard from './EventCard';
 import { fetchEvents } from '@/services/eventService';
 import { Event } from '@/interfaces/eventInterface';
 import { DEBUG_MODE } from '@/services/api'; 
