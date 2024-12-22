@@ -29,11 +29,11 @@ export default function EventList({ selectedDate }: EventListProps) {
   }, []);
 
   const filteredEvents = selectedDate
-    ? events.filter((event) => {
-        const eventDate = new Date(event.date).toISOString().split('T')[0]; // Garante que event.date está no formato 'YYYY-MM-DD'
-        return eventDate === selectedDate;
-      })
-    : events;
+  ? events.filter((event) => {
+      const eventDate = new Date(event.date).toISOString().slice(5, 10); 
+      return eventDate === selectedDate;
+    })
+  : events;
 
   if (loading) {
     return (

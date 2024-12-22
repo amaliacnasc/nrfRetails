@@ -13,12 +13,12 @@ interface DateScrollProps {
 }
 
 const data: Date[] = [
-  { displayDate: '09 Jan', day: 'Quinta', value: '2025-01-09' },
-  { displayDate: '10 Jan', day: 'Sexta', value: '2025-01-10' },
-  { displayDate: '11 Jan', day: 'Sábado', value: '2025-01-11' },
-  { displayDate: '12 Jan', day: 'Domingo', value: '2025-01-12' },
-  { displayDate: '13 Jan', day: 'Segunda', value: '2025-01-13' },
-  { displayDate: '14 Jan', day: 'Terça', value: '2025-01-14' },
+  { displayDate: '09 Jan', day: 'Quinta', value: '01-09' },
+  { displayDate: '10 Jan', day: 'Sexta', value: '01-10' },
+  { displayDate: '11 Jan', day: 'Sábado', value: '01-11' },
+  { displayDate: '12 Jan', day: 'Domingo', value: '01-12' },
+  { displayDate: '13 Jan', day: 'Segunda', value: '01-13' },
+  { displayDate: '14 Jan', day: 'Terça', value: '01-14' },
 ];
 
 export default function DateScroll({ selectedDate, setSelectedDate }: DateScrollProps) {
