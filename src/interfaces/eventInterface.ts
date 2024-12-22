@@ -19,7 +19,7 @@ export interface Event {
     title: string;
     description: string;
     time: string;
-    date: Date;
+    date: string;
     location: string;
     checkins?: Checkin[];
     speaker?: Speaker[];

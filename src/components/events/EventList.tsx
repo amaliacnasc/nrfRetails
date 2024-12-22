@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
-import { Feather } from '@expo/vector-icons'; 
+import { Feather } from '@expo/vector-icons';
 import EventCard from './EventCard';
 import { fetchEvents } from '@/services/eventService';
 import { Event } from '@/interfaces/eventInterface';
-import { DEBUG_MODE } from '@/services/api'; 
 
-export default function EventList() {
+interface EventListProps {
+  selectedDate: string;
+}
+
+export default function EventList({ selectedDate }: EventListProps) {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -16,9 +19,7 @@ export default function EventList() {
         const fetchedEvents = await fetchEvents();
         setEvents(fetchedEvents);
       } catch (error) {
-        if (DEBUG_MODE) {
-          console.error('Erro ao carregar eventos:', error);
-        }
+        console.error('Erro ao carregar eventos:', error);
       } finally {
         setLoading(false);
       }
@@ -26,6 +27,13 @@ export default function EventList() {
 
     loadEvents();
   }, []);
+
+  const filteredEvents = selectedDate
+    ? events.filter((event) => {
+        const eventDate = new Date(event.date).toISOString().split('T')[0]; // Garante que event.date está no formato 'YYYY-MM-DD'
+        return eventDate === selectedDate;
+      })
+    : events;
 
   if (loading) {
     return (
@@ -36,11 +44,11 @@ export default function EventList() {
     );
   }
 
-  if (events.length === 0) {
+  if (filteredEvents.length === 0) {
     return (
       <View className="w-full mt-5 px-7 items-center">
         <Feather name="frown" size={48} color="#666" className="mb-3" />
-        <Text className="text-lg font-semibold text-gray-600">Não há eventos ainda</Text>
+        <Text className="text-lg font-semibold text-gray-600">Não há eventos para essa data</Text>
       </View>
     );
   }
@@ -49,7 +57,7 @@ export default function EventList() {
     <View className="w-full mt-5 px-7">
       <Text className="text-lg font-semibold">Sua programação</Text>
       <View className="space-y-3 mt-4">
-        {events.map((event) => (
+        {filteredEvents.map((event) => (
           <EventCard key={event.idActivity} event={event} />
         ))}
       </View>
