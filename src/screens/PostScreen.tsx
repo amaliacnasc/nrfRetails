@@ -3,8 +3,8 @@ import { View, Pressable, Text } from 'react-native';
 
 import { Post } from '@/interfaces/postInterface';
 import { HeaderTimeline } from '../../linha do tempo/header_timeline';
-import FetchPosts from '@/conponents/timeline/FetchPosts';
-import CreatePostModal from '@/conponents/timeline/CreatePostModal';
+import FetchPosts from '@/components/timeline/FetchPosts';
+import CreatePostModal from '@/components/timeline/CreatePostModal';
 
 const PostCard: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
