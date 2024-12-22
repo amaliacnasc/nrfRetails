@@ -24,7 +24,7 @@ const LoginScreen = () => {
     try {
       await login(email);
       const participant = await getParticipantByEmail(email);
-      Alert.alert("Sucesso", `Bem-vindo, ${participant.name}!`);
+     // Alert.alert("Sucesso", `Bem-vindo, ${participant.name}!`);
       navigation.navigate("TabNavigator");
     } catch (error) {
       Alert.alert("Erro", "Falha no login ou na busca de informações do participante.");
