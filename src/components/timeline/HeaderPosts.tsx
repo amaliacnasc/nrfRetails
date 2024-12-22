@@ -1,6 +1,6 @@
 import React from "react";
 import {View, Text,} from 'react-native'
-import '../src/global.css'
+import '../../global.css'
 
 
 export function HeaderPosts() {

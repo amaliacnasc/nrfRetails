@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Pressable, Text } from 'react-native';
 import { Post } from '@/interfaces/postInterface';
-import { HeaderTimeline } from '../../linha do tempo/header_timeline';
+import { HeaderTimeline } from '@/components/timeline/HeaderTimeline';
 import FetchPosts from '@/components/timeline/PostList';
 import CreatePostModal from '@/components/timeline/CreatePostModal';
 
