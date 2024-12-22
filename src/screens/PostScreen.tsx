@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { View, Pressable, Text } from 'react-native';
-
 import { Post } from '@/interfaces/postInterface';
 import { HeaderTimeline } from '../../linha do tempo/header_timeline';
-import FetchPosts from '@/components/timeline/FetchPosts';
+import FetchPosts from '@/components/timeline/PostList';
 import CreatePostModal from '@/components/timeline/CreatePostModal';
 
-const PostCard: React.FC = () => {
+const PostScreen: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -45,4 +44,4 @@ const PostCard: React.FC = () => {
   );
 };
 
-export default PostCard;
+export default PostScreen;

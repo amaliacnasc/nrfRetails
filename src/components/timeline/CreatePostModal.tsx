@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Image,
-  Modal,
-  Alert,
-  Pressable,
-} from 'react-native';
+import { View, Text, TextInput, Image, Modal, Alert, Pressable } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -36,7 +28,6 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
         allowsEditing: true,
         quality: 1,
       });
-
       if (!result.canceled) {
         setImageUrl(result.assets[0].uri);
       }
@@ -52,7 +43,6 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
         allowsEditing: true,
         quality: 1,
       });
-
       if (!result.canceled) {
         setImageUrl(result.assets[0].uri);
       }
@@ -66,13 +56,11 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
       Alert.alert('Erro', 'Preencha todos os campos antes de postar.');
       return;
     }
-
     const newPost = {
-      idParticipant: 1, // Substitua com o ID real do participante
+      idParticipant: 1,
       imageUrl,
       description,
     };
-
     try {
       const createdPost = await createPost(newPost);
       setPosts((prevPosts) => [createdPost, ...prevPosts]);
@@ -86,47 +74,32 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
 
   return (
     <Modal visible={modalVisible} animationType="slide">
-      <View style={{ flex: 1, padding: 16 }}>
+      <View className="flex-1 p-4">
         <Pressable onPress={() => setModalVisible(false)}>
-          <AntDesign
-            name="left"
-            size={24}
-            color="#054FC7"
-            style={{ marginBottom: 16 }}
-          />
+          <AntDesign name="left" size={24} color="#054FC7" className="mb-4" />
         </Pressable>
 
-        <View style={{ marginBottom: 16 }}>
-          <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Descrição</Text>
+        <View className="mb-4">
+          <Text className="font-bold text-lg">Descrição</Text>
           <TextInput
             placeholder="Insira a descrição"
             value={description}
             onChangeText={setDescription}
-            style={{
-              marginTop: 8,
-              padding: 8,
-              borderWidth: 1,
-              borderColor: '#d1d5db',
-              borderRadius: 4,
-              backgroundColor: '#f9fafb',
-            }}
+            className="mt-2 p-2 border border-gray-300 rounded bg-gray-100"
           />
         </View>
 
         {imageUrl && (
-          <Image
-            source={{ uri: imageUrl }}
-            style={{ width: '100%', height: 200, marginBottom: 16 }}
-          />
+          <Image source={{ uri: imageUrl }} className="w-full h-52 mb-4 rounded" />
         )}
 
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16 }}>
-          <Pressable onPress={openImagePicker} style={{ alignItems: 'center' }}>
+        <View className="flex-row justify-between mb-4">
+          <Pressable onPress={openImagePicker} className="items-center">
             <MaterialCommunityIcons name="view-gallery-outline" size={32} color="#60a5fa" />
             <Text>Galeria</Text>
           </Pressable>
 
-          <Pressable onPress={openCamera} style={{ alignItems: 'center' }}>
+          <Pressable onPress={openCamera} className="items-center">
             <MaterialCommunityIcons name="camera-outline" size={32} color="#60a5fa" />
             <Text>Câmera</Text>
           </Pressable>
@@ -134,14 +107,9 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
 
         <Pressable
           onPress={handleCreatePost}
-          style={{
-            backgroundColor: '#000',
-            padding: 12,
-            borderRadius: 8,
-            alignItems: 'center',
-          }}
+          className="bg-black px-4 py-3 rounded-lg items-center"
         >
-          <Text style={{ color: '#fff', fontWeight: 'bold' }}>Postar</Text>
+          <Text className="text-white font-bold">Postar</Text>
         </Pressable>
       </View>
     </Modal>

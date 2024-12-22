@@ -1,4 +1,4 @@
-import { Like } from "./likesinteraface";
+import { Like } from "./likesInteraface";
 import { Participant } from "./participantInterface";
 
 export interface Post {
