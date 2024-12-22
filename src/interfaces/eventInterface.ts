@@ -2,7 +2,7 @@ import { AreaOfExpertiseDTO } from "./areaOfExpertiseInterface";
 import { Checkin } from "./checkinInterface";
 import { Speaker } from "./speakerInterface";
 
-export type Event = {
+export type Evente = {
     title: string;
     date: string;
     time: string;
@@ -14,7 +14,7 @@ export type Event = {
     }[];
   };
 // trocar pra event
-export interface Evente {
+export interface Event {
     idActivity: number;
     title: string;
     description: string;

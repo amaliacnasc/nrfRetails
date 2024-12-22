@@ -1,6 +1,6 @@
 import { ScrollView, View, Text, Image } from 'react-native';
-import DateScroll from '@/components/dateScroll';
-import EventList from '@/components/eventList';
+import EventList from '@/components/eventList/EventList';
+import DateScroll from '@/components/dateScroll/DateScroll';
 
 export default function HomeScreen() {
   return (
