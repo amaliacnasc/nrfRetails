@@ -1,6 +1,24 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+<<<<<<< HEAD
     "strict": true
   }
+=======
+    "strict": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "src/types/expo-env.d.ts",
+    "nativewind-env.d.ts",
+    "expo-env.d.ts"
+, "src/navigators/TabNavigator.tsx"  ]
+>>>>>>> 68588cea0c8509cd7bfe8fc99f8255c52cf8e5b8
 }
