@@ -1,16 +1,5 @@
 {
   "expo": {
-<<<<<<< HEAD
-    "name": "nretails",
-    "slug": "nretails",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/splash-icon.png",
-=======
     "name": "nrfRetails",
     "slug": "nrfRetails",
     "version": "1.0.0",
@@ -21,7 +10,6 @@
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/splash-icon.png",
->>>>>>> 68588cea0c8509cd7bfe8fc99f8255c52cf8e5b8
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -30,21 +18,11 @@
     },
     "android": {
       "adaptiveIcon": {
-<<<<<<< HEAD
-        "foregroundImage": "./assets/adaptive-icon.png",
-=======
         "foregroundImage": "./assets/images/adaptive-icon.png",
->>>>>>> 68588cea0c8509cd7bfe8fc99f8255c52cf8e5b8
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
-<<<<<<< HEAD
-      "favicon": "./assets/favicon.png"
-    }
-  }
-}
-=======
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
@@ -54,4 +32,3 @@
     }
   }
 }
->>>>>>> 68588cea0c8509cd7bfe8fc99f8255c52cf8e5b8
