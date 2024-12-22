@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Button, ActivityIndicator, Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { fetchEvents } from '@/services/eventService';
-import {saveFavoriteEvent} from '@/services/FavoriteService'
+import {saveFavoriteEvent} from '@/services/favoriteService'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Event } from '@/interfaces/eventInterface';
 
