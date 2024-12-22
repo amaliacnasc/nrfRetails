@@ -2,7 +2,7 @@ import {  View, StatusBar, Image, Modal, ScrollView, TextInput, TouchableOpacity
 import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import PostCard from '../../linha do tempo/postcard'; // Importa o componente
+import PostCard from '../screens/PostScreen'; // Importa o componente
 
 import "../global.css";
 import HomeScreen from './home';
