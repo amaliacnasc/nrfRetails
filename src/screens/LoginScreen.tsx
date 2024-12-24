@@ -1,3 +1,5 @@
+// src/screens/LoginScreen.tsx
+
 import React, { useState } from "react";
 import {
   View,
@@ -23,8 +25,9 @@ const LoginScreen: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const navigation = useNavigation<LoginScreenNavigationProp>();
 
-  const handleLogin = async () => {
-    if (!email) {
+  const handleLogin = async (emailToLogin?: string) => {
+    const emailToUse = emailToLogin || email;
+    if (!emailToUse) {
       Alert.alert("Erro", "Por favor, insira um email válido.");
       return;
     }
@@ -32,8 +35,8 @@ const LoginScreen: React.FC = () => {
     setLoading(true);
 
     try {
-      await login(email);
-      const participant = await getParticipantByEmail(email);
+      await login(emailToUse);
+      const participant = await getParticipantByEmail(emailToUse);
       navigation.navigate("TabNavigator");
     } catch (error) {
       Alert.alert("Erro", "Falha no login ou na busca de informações do participante.");
@@ -50,16 +53,16 @@ const LoginScreen: React.FC = () => {
     setIsModalVisible(false);
   };
 
-  const handleRegisterSuccess = () => {
+  const handleRegisterSuccess = (registeredEmail: string) => {
     setIsModalVisible(false);
-    navigation.navigate("TabNavigator");
+    handleLogin(registeredEmail);
   };
 
   return (
     <View className="flex-1 justify-center items-center bg-white p-5">
-      <Text className="text-2xl font-bold text-customDarkBlue mb-5">Login</Text>
+      <Text className="text-2xl font-bold text-[#04378b] mb-5">Login</Text>
       <TextInput
-        className="w-full h-12 border border-blue-400 rounded-md px-3 mb-5 text-base"
+        className="w-full h-12 border border-[#6e99df] rounded-md px-3 mb-5 text-base"
         placeholder="Digite seu email"
         value={email}
         onChangeText={setEmail}
@@ -68,11 +71,11 @@ const LoginScreen: React.FC = () => {
       />
       <Button
         title={loading ? "Carregando..." : "Entrar"}
-        onPress={handleLogin}
+        onPress={() => handleLogin()}
         disabled={loading}
       />
       <TouchableOpacity className="mt-5" onPress={openRegisterModal}>
-        <Text className="text-customBlue text-base">Não tem uma conta? Cadastre-se</Text>
+        <Text className="text-[#0056D6] text-base">Não tem uma conta? Cadastre-se</Text>
       </TouchableOpacity>
       <Modal
         visible={isModalVisible}

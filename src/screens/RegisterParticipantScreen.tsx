@@ -1,3 +1,5 @@
+// src/screens/RegisterParticipantScreen.tsx
+
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -16,7 +18,7 @@ import { getAllAreas } from '@/services/areaService';
 
 interface RegisterParticipantScreenProps {
   onClose: () => void;
-  onRegisterSuccess: () => void;
+  onRegisterSuccess: (email: string) => void;
 }
 
 const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({ onClose, onRegisterSuccess }) => {
@@ -81,7 +83,7 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({ o
       setContact('');
       setCompanyName('');
       setSelectedAreas([]);
-      onRegisterSuccess(); // Chama a função de sucesso para navegar
+      onRegisterSuccess(email);
     } catch (error: any) {
       console.error(error);
       Alert.alert('Erro', error.message || 'Falha no cadastro.');
@@ -92,28 +94,28 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({ o
 
   if (areasLoading) {
     return (
-      <View className="flex-1 justify-center items-center bg-customGray">
+      <View className="flex-1 justify-center items-center bg-[#f0f0f0]">
         <ActivityIndicator size="large" color="#0056D6" />
-        <Text className="mt-2.5 text-base text-gray-600">Carregando áreas de especialização...</Text>
+        <Text className="mt-2.5 text-base text-[#555555]">Carregando áreas de especialização...</Text>
       </View>
     );
   }
 
   return (
-    <ScrollView className="flex-1 bg-customGray p-5">
-      <Text className="text-2xl font-bold text-customDarkBlue text-center mb-8">
+    <ScrollView className="flex-1 bg-[#f0f0f0] p-5">
+      <Text className="text-2xl font-bold text-[#04378b] text-center mb-8">
         Cadastro de Participante
       </Text>
 
       <TextInput
-        className="bg-white p-4 rounded-md text-base mb-5 border border-blue-400"
+        className="bg-white p-4 rounded-md text-base mb-5 border border-[#6e99df]"
         placeholder="Nome*"
         value={name}
         onChangeText={setName}
       />
 
       <TextInput
-        className="bg-white p-4 rounded-md text-base mb-5 border border-blue-400"
+        className="bg-white p-4 rounded-md text-base mb-5 border border-[#6e99df]"
         placeholder="Email*"
         value={email}
         onChangeText={setEmail}
@@ -122,14 +124,14 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({ o
       />
 
       <TextInput
-        className="bg-white p-4 rounded-md text-base mb-5 border border-blue-400"
+        className="bg-white p-4 rounded-md text-base mb-5 border border-[#6e99df]"
         placeholder="Posição*"
         value={position}
         onChangeText={setPosition}
       />
 
       <TextInput
-        className="bg-white p-4 rounded-md text-base mb-5 border border-blue-400"
+        className="bg-white p-4 rounded-md text-base mb-5 border border-[#6e99df]"
         placeholder="Contato*"
         value={contact}
         onChangeText={setContact}
@@ -137,13 +139,13 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({ o
       />
 
       <TextInput
-        className="bg-white p-4 rounded-md text-base mb-5 border border-blue-400"
+        className="bg-white p-4 rounded-md text-base mb-5 border border-[#6e99df]"
         placeholder="Nome da Empresa (Opcional)"
         value={companyName}
         onChangeText={setCompanyName}
       />
 
-      <Text className="text-xl font-semibold text-customDarkBlue mb-3">
+      <Text className="text-xl font-semibold text-[#04378b] mb-3">
         Áreas de Especialização*
       </Text>
       {areas.map((area) => (
@@ -157,12 +159,12 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({ o
             size={24}
             color="#0056D6"
           />
-          <Text className="ml-2 text-base text-gray-700">{area.name}</Text>
+          <Text className="ml-2 text-base text-[#333333]">{area.name}</Text>
         </TouchableOpacity>
       ))}
 
       <TouchableOpacity
-        className={`bg-customBlue p-4 rounded-md items-center mt-8 ${loading ? 'opacity-60' : ''}`}
+        className={`bg-[#0056D6] p-4 rounded-md items-center mt-8 ${loading ? 'opacity-60' : ''}`}
         onPress={handleSubmit}
         disabled={loading}
       >
@@ -174,7 +176,7 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({ o
       </TouchableOpacity>
 
       <TouchableOpacity className="mt-5 items-center" onPress={onClose}>
-        <Text className="text-customBlue text-base">Fechar</Text>
+        <Text className="text-[#0056D6] text-base">Fechar</Text>
       </TouchableOpacity>
     </ScrollView>
   );
