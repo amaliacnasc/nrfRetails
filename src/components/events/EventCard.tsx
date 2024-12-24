@@ -1,15 +1,16 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import { Event } from '@/interfaces/eventInterface';
 
 interface EventCardProps {
   event: Event;
-  isFavorite: boolean; // Recebe se o evento é favorito ou não
+  isFavorite: boolean;
   onFavoriteSuccess?: (event: Event) => void;
+  onRemoveFavorite?: () => void; 
 }
 
-export default function EventCard({ event, isFavorite, onFavoriteSuccess }: EventCardProps) {
+export default function EventCard({ event, isFavorite, onFavoriteSuccess, onRemoveFavorite }: EventCardProps) {
   const formattedDate = event.date.split('-').reverse().join('/');
 
   const handleFavorite = () => {
@@ -18,34 +19,40 @@ export default function EventCard({ event, isFavorite, onFavoriteSuccess }: Even
     }
   };
 
-  console.log('Event Rendered:', event.title, 'Is Favorite:', isFavorite);
+  const handleRemoveFavorite = () => {
+    if (onRemoveFavorite) {
+      onRemoveFavorite();
+    }
+  };
 
   return (
     <View className="bg-white rounded-lg p-4 shadow-sm my-2">
       <View className="flex-row justify-between items-center mb-3">
         <Text className="text-lg font-bold text-gray-800">{event.title}</Text>
-        <TouchableOpacity onPress={handleFavorite}>
-          <Feather
-            name="bookmark"
-            size={24}
-            color={isFavorite ? '#0056D6' : '#666'} // Ajusta a cor dinamicamente
-          />
-        </TouchableOpacity>
+        {isFavorite ? (
+          <TouchableOpacity onPress={handleRemoveFavorite}>
+            <MaterialIcons name="bookmark" size={24} color="#0056D6" />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={handleFavorite}>
+            <MaterialIcons name="bookmark-border" size={24} color="#666" />
+          </TouchableOpacity>
+        )}
       </View>
       <View className="flex-row items-center mb-3">
         <View className="flex-row items-center mr-4">
-          <Feather name="calendar" size={20} color="#0056D6" />
+          <MaterialIcons name="calendar-today" size={20} color="#0056D6" />
           <Text className="ml-2 text-sm text-blue-600">{formattedDate}</Text>
         </View>
         <View className="flex-row items-center">
-          <Feather name="clock" size={20} color="#0056D6" />
+          <MaterialIcons name="access-time" size={20} color="#0056D6" />
           <Text className="ml-2 text-sm text-blue-600">{event.time}</Text>
         </View>
       </View>
       <Text className="text-base font-semibold text-gray-800 mb-2">Sobre</Text>
       <Text className="text-sm text-gray-600 mb-3">{event.description}</Text>
       <View className="flex-row items-center mb-3">
-        <Feather name="map-pin" size={20} color="#666" />
+        <MaterialIcons name="place" size={20} color="#666" />
         <Text className="ml-2 text-sm text-gray-600">{event.location}</Text>
       </View>
       {event.speaker && event.speaker.length > 0 && (
