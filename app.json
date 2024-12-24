@@ -14,13 +14,15 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.miguelamaral254.nrfRetails"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.miguelamaral254.nrfRetails"
     },
     "web": {
       "bundler": "metro",
@@ -29,6 +31,12 @@
     },
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "8144c803-e457-43ea-8921-e1de9f8bb27e"
+      }
+    },
+    "owner": "miguelamaral254"
   }
 }

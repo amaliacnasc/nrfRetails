@@ -22,7 +22,7 @@ export const getParticipantByEmail = async (email: string): Promise<Participant>
 };
 export const getAllParticipants = async (): Promise<any[]> => {
   try {
-    const response = await api.get('/participants');
+    const response = await api.get('appevento/participants');
     return response.data; 
   } catch (error) {
     if (DEBUG_MODE) {

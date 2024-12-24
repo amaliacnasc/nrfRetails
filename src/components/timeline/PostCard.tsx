@@ -25,7 +25,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           setIdParticipant(participant.idParticipant);
         }
       } catch (error) {
-        Alert.alert("Erro", "Não foi possível recuperar o ID do participante.");
+       // Alert.alert("Erro", "Não foi possível recuperar o ID do participante.");
       }
     };
 
@@ -44,7 +44,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
   const handleLike = async () => {
     if (!idParticipant) {
-      Alert.alert("Erro", "ID do participante não encontrado.");
+    //  Alert.alert("Erro", "ID do participante não encontrado.");
       return;
     }
 
@@ -57,7 +57,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       }
       setLiked(!liked);
     } catch (error) {
-      Alert.alert("Erro", "Não foi possível atualizar o like.");
+      //Alert.alert("Erro", "Não foi possível atualizar o like.");
     }
   };
 

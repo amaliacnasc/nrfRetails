@@ -7,12 +7,12 @@ interface EditProfileModalProps {
     nome: string;
     email: string;
     empresa: string;
-    cargo: string;
-    contato: string;
+    position: string; // Certifique-se de que é 'position'
+    contact: string; // Certifique-se de que é 'contact'
   };
   onClose: () => void;
   onSave: () => void;
-  handleInputChange: (field: keyof EditProfileModalProps['formData'], value: string) => void; // Use keyof para tipar os campos corretamente
+  handleInputChange: (field: keyof EditProfileModalProps['formData'], value: string) => void;
 }
 
 const EditProfileModal: React.FC<EditProfileModalProps> = ({
@@ -54,21 +54,21 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
           onChangeText={(text) => handleInputChange('empresa', text)}
         />
 
-        <Text className="text-sm font-bold text-gray-700 mb-1">Cargo</Text>
-        <TextInput
-          placeholder="Cargo"
-          className="border border-gray-300 p-2 mb-4 rounded"
-          value={formData.cargo}
-          onChangeText={(text) => handleInputChange('cargo', text)}
-        />
+<Text className="text-sm font-bold text-gray-700 mb-1">Cargo</Text>
+<TextInput
+  placeholder="Cargo"
+  className="border border-gray-300 p-2 mb-4 rounded"
+  value={formData.position} 
+  onChangeText={(text) => handleInputChange('position', text)}
+/>
 
-        <Text className="text-sm font-bold text-gray-700 mb-1">Contato</Text>
-        <TextInput
-          placeholder="Contato"
-          className="border border-gray-300 p-2 mb-4 rounded"
-          value={formData.contato}
-          onChangeText={(text) => handleInputChange('contato', text)}
-        />
+<Text className="text-sm font-bold text-gray-700 mb-1">Contato</Text>
+<TextInput
+  placeholder="Contato"
+  className="border border-gray-300 p-2 mb-4 rounded"
+  value={formData.contact} 
+  onChangeText={(text) => handleInputChange('contact', text)}
+/>
 
         <TouchableOpacity
           onPress={onSave}

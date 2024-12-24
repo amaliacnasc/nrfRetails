@@ -26,8 +26,8 @@ const InfoScreen: React.FC = () => {
     nome: 'Carregando nome...',
     email: 'Carregando e-mail...',
     empresa: '',
-    cargo: '',
-    contato: '',
+    position: '',
+    contact: '',
   });
 
   useEffect(() => {
@@ -40,8 +40,8 @@ const InfoScreen: React.FC = () => {
             nome: participant.name || 'Nome não disponível',
             email: participant.email || '',
             empresa: participant.companyName || '',
-            cargo: '',
-            contato: '',
+            position: '',
+            contact: '',
           });
         }
       } catch (error) {
@@ -62,7 +62,10 @@ const InfoScreen: React.FC = () => {
         idParticipant: 0,
         name: formData.nome,
         email: formData.email,
+        position: formData.position,
+        contact:formData.contact,
         companyName: formData.empresa,
+        
         AreaOfExpertise: [],
         postPermission: undefined,
       };
