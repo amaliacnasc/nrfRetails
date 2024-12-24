@@ -44,4 +44,17 @@ export const updateParticipant = async (data: CreateParticipant): Promise<void> 
     }
     throw error;
   }
+ 
+}; export const createParticipant = async (data: CreateParticipant): Promise<void> => {
+  try {
+    const response = await api.post('/appevento/participants', data);
+    if (DEBUG_MODE) {
+      console.log('Participante criado com sucesso:', data);
+    }
+  } catch (error) {
+    if (DEBUG_MODE) {
+      console.error('Erro ao criar participante:', error);
+    }
+    throw error;
+  }
 };
