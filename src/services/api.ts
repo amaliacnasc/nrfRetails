@@ -1,15 +1,15 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-//import { API_BASE_URL } from "@env";
+import { API_BASE_URL } from "@env";
 // n descomenta pra n quebrar o codigo por favor! 
 // basta substituir a const pelo ip dado pelo seu expo!
 
-const APIURL = "http://192.168.1.3:8080";
+//const APIURL = "https://missaonrf25.pe.senac.br";
 
 const api = axios.create({
   //não tira o cod comentado de baixo, é implm futura!
-  //baseURL: API_BASE_URL,
-  baseURL: APIURL,
+  baseURL: API_BASE_URL,
+  //baseURL: APIURL,
   headers: {
     "Content-Type": "application/json",
   },

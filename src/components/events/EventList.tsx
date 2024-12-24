@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, ActivityIndicator, Alert } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { View, Text, ActivityIndicator, Alert } from 'react-native';
 import { fetchEvents } from '@/services/eventService';
-import {saveFavoriteEvent} from '@/services/favoriteService'
+import { saveFavoriteEvent } from '@/services/favoriteService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import EventCard from './EventCard'; // Importando o componente EventCard
 import { Event } from '@/interfaces/eventInterface';
 
 interface EventListProps {
@@ -17,7 +17,6 @@ export default function EventList({ selectedDate }: EventListProps) {
 
   useEffect(() => {
     const initialize = async () => {
-      // Carrega o token do usuário do AsyncStorage
       const token = await AsyncStorage.getItem('userToken');
       setUserToken(token);
       await loadEvents();
@@ -72,7 +71,6 @@ export default function EventList({ selectedDate }: EventListProps) {
   if (filteredEvents.length === 0) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Feather name="frown" size={48} color="#666" />
         <Text>Não há eventos para essa data</Text>
       </View>
     );
@@ -82,20 +80,11 @@ export default function EventList({ selectedDate }: EventListProps) {
     <View style={{ padding: 16 }}>
       <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 16 }}>Sua programação</Text>
       {filteredEvents.map((event) => (
-        <View
+        <EventCard
           key={event.idActivity}
-          style={{
-            marginBottom: 16,
-            padding: 16,
-            borderWidth: 1,
-            borderColor: '#ccc',
-            borderRadius: 8,
-          }}
-        >
-          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{event.title}</Text>
-          <Text style={{ fontSize: 14, color: '#666' }}>{event.date}</Text>
-          <Button title="Favoritar" onPress={() => handleSaveFavorite(event)} />
-        </View>
+          event={event}
+          onFavorite={handleSaveFavorite} // Passa a função como prop
+        />
       ))}
     </View>
   );

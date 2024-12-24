@@ -1,17 +1,23 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { Event } from '@/interfaces/eventInterface';
 
-export default function EventCard({ event }: { event: Event }) {
-  // Formata a data para DD/MM/YYYY
+interface EventCardProps {
+  event: Event;
+  onFavorite: (event: Event) => void;
+}
+
+export default function EventCard({ event, onFavorite }: EventCardProps) {
   const formattedDate = event.date.split('-').reverse().join('/');
 
   return (
     <View className="bg-white rounded-lg p-4 shadow-sm my-2">
       <View className="flex-row justify-between items-center mb-3">
         <Text className="text-lg font-bold text-gray-800">{event.title}</Text>
-        <Feather name="bookmark" size={24} color="#666" />
+        <TouchableOpacity onPress={() => onFavorite(event)}>
+          <Feather name="bookmark" size={24} color="#0056D6" />
+        </TouchableOpacity>
       </View>
 
       <View className="flex-row items-center mb-3">
@@ -32,28 +38,6 @@ export default function EventCard({ event }: { event: Event }) {
         <Feather name="map-pin" size={20} color="#666" />
         <Text className="ml-2 text-sm text-gray-600">{event.location}</Text>
       </View>
-
-      {event.speaker && event.speaker.length > 0 && (
-        <View className="mb-3">
-          <Text className="text-base font-semibold text-gray-800">Palestrantes</Text>
-          {event.speaker.map((sp, index) => (
-            <Text key={index} className="text-sm text-gray-600">
-              {sp.name} - {sp.role} ({sp.company})
-            </Text>
-          ))}
-        </View>
-      )}
-
-      {event.areaOfExpertise && event.areaOfExpertise.length > 0 && (
-        <View>
-          <Text className="text-base font-semibold text-gray-800">Áreas de Especialização</Text>
-          {event.areaOfExpertise.map((area, index) => (
-            <Text key={index} className="text-sm text-gray-600">
-              {area.name}
-            </Text>
-          ))}
-        </View>
-      )}
     </View>
   );
 }

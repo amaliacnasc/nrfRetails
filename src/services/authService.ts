@@ -8,7 +8,7 @@ interface LoginResponse {
 
 export const login = async (email: string): Promise<LoginResponse> => {
   try {
-    const response = await api.post("/appevento/auth/login", { email });
+    const response = await api.post("/appevento/appevento/auth/login", { email });
     const { token, email: userEmail } = response.data;
 
     await AsyncStorage.setItem("token", token);
