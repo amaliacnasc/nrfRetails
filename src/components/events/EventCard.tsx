@@ -7,9 +7,10 @@ interface EventCardProps {
   event: Event;
   isFavorite: boolean;
   onFavoriteSuccess?: (event: Event) => void;
+  onRemoveFavorite?: () => void; 
 }
 
-export default function EventCard({ event, isFavorite, onFavoriteSuccess }: EventCardProps) {
+export default function EventCard({ event, isFavorite, onFavoriteSuccess, onRemoveFavorite }: EventCardProps) {
   const formattedDate = event.date.split('-').reverse().join('/');
 
   const handleFavorite = () => {
@@ -18,8 +19,10 @@ export default function EventCard({ event, isFavorite, onFavoriteSuccess }: Even
     }
   };
 
-  const handleAlreadyFavorite = () => {
-    console.log('Este evento já está nos favoritos!');
+  const handleRemoveFavorite = () => {
+    if (onRemoveFavorite) {
+      onRemoveFavorite();
+    }
   };
 
   return (
@@ -27,7 +30,7 @@ export default function EventCard({ event, isFavorite, onFavoriteSuccess }: Even
       <View className="flex-row justify-between items-center mb-3">
         <Text className="text-lg font-bold text-gray-800">{event.title}</Text>
         {isFavorite ? (
-          <TouchableOpacity onPress={handleAlreadyFavorite}>
+          <TouchableOpacity onPress={handleRemoveFavorite}>
             <MaterialIcons name="bookmark" size={24} color="#0056D6" />
           </TouchableOpacity>
         ) : (
