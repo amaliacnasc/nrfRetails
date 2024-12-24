@@ -1,6 +1,14 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Modal, View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import FlightInfoCard from './FlightInfoCard';
+import HotelInfoCard from './HotelInfoCard';
+import TourismInfoCard from './TourismInfoCard';
+import {
+  flightInfoData,
+  hotelInfoData,
+  tourismInfoData,
+} from '../../mocks/travelGuideMocks'; 
 
 interface TravelGuideModalProps {
   visible: boolean;
@@ -25,7 +33,7 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
           <View className="bg-white p-6 rounded-lg w-80">
             <Text className="text-lg font-bold mb-4">Hospedagem e Transporte</Text>
             <View className="flex-row justify-around mt-4">
-              {/* Botão para abrir o submodal de Voo */}
+              
               <TouchableOpacity
                 className="items-center"
                 onPress={() => setFlightModalVisible(true)}
@@ -33,7 +41,7 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
                 <MaterialIcons name="flight" size={30} color="black" />
                 <Text className="text-center mt-2">Voo</Text>
               </TouchableOpacity>
-              {/* Botão para abrir o submodal de Hospedagem */}
+              
               <TouchableOpacity
                 className="items-center"
                 onPress={() => setHotelModalVisible(true)}
@@ -41,7 +49,7 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
                 <MaterialIcons name="hotel" size={30} color="black" />
                 <Text className="text-center mt-2">Hospedagem</Text>
               </TouchableOpacity>
-              {/* Botão para abrir o submodal de Turismo */}
+             
               <TouchableOpacity
                 className="items-center"
                 onPress={() => setTourismModalVisible(true)}
@@ -71,7 +79,13 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
           <View className="bg-white p-6 rounded-lg w-80">
             <Text className="text-lg font-bold mb-4">Informações sobre Voos</Text>
             <ScrollView>
-              <Text className="text-gray-700 mb-4">Aqui estão as informações sobre voos.</Text>
+              {flightInfoData.map((flight, index) => (
+                <FlightInfoCard
+                  key={index}
+                  date={flight.date}
+                  description={flight.description}
+                />
+              ))}
             </ScrollView>
             <TouchableOpacity
               onPress={() => setFlightModalVisible(false)}
@@ -83,7 +97,6 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
         </View>
       </Modal>
 
-      {/* Submodal de Hospedagem */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -94,7 +107,16 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
           <View className="bg-white p-6 rounded-lg w-80">
             <Text className="text-lg font-bold mb-4">Informações sobre Hospedagem</Text>
             <ScrollView>
-              <Text className="text-gray-700 mb-4">Aqui estão as informações sobre hospedagem.</Text>
+              {hotelInfoData.map((hotel, index) => (
+                <HotelInfoCard
+                  key={index}
+                  hotelName={hotel.hotelName}
+                  address={hotel.address}
+                  checkIn={hotel.checkIn}
+                  checkOut={hotel.checkOut}
+                  services={hotel.services}
+                />
+              ))}
             </ScrollView>
             <TouchableOpacity
               onPress={() => setHotelModalVisible(false)}
@@ -106,7 +128,6 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
         </View>
       </Modal>
 
-      {/* Submodal de Turismo */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -117,7 +138,13 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
           <View className="bg-white p-6 rounded-lg w-80">
             <Text className="text-lg font-bold mb-4">Informações sobre Turismo</Text>
             <ScrollView>
-              <Text className="text-gray-700 mb-4">Aqui estão as informações sobre turismo.</Text>
+              {tourismInfoData.map((tourism, index) => (
+                <TourismInfoCard
+                  key={index}
+                  title={tourism.title}
+                  items={tourism.items}
+                />
+              ))}
             </ScrollView>
             <TouchableOpacity
               onPress={() => setTourismModalVisible(false)}
