@@ -10,7 +10,7 @@ export default function FavoriteEventsScreen() {
   const [favorites, setFavorites] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [idParticipant, setIdParticipant] = useState<number | null>(null);
-  const { setFavorites: updateContextFavorites, toggleRefreshFavorites } = useFavorites();
+  const { setFavorites: updateContextFavorites, toggleRefreshFavorites, refreshFavorites } = useFavorites();
 
   useEffect(() => {
     const initialize = async () => {
@@ -33,14 +33,14 @@ export default function FavoriteEventsScreen() {
     };
 
     initialize();
-  }, []);
+  }, [refreshFavorites]);  // Aqui estamos escutando a mudança do refreshFavorites
 
   const loadFavorites = async (participantId: number) => {
     try {
       setLoading(true);
       const fetchedFavorites = await fetchFavoriteEvents(participantId);
       setFavorites(fetchedFavorites);
-      updateContextFavorites(fetchedFavorites.map((fav) => fav.activity.idActivity));
+      updateContextFavorites(fetchedFavorites.map((fav) => fav.activity.idActivity)); // Atualiza o contexto global
     } catch (error) {
       console.error("Erro ao buscar favoritos:", error);
       Alert.alert("Erro", "Não foi possível carregar os favoritos.");
@@ -56,8 +56,8 @@ export default function FavoriteEventsScreen() {
         (item) => item.idSaveActivity !== favorite.idSaveActivity
       );
       setFavorites(updatedFavorites);
-      updateContextFavorites(updatedFavorites.map((fav) => fav.activity.idActivity));
-      toggleRefreshFavorites();
+      updateContextFavorites(updatedFavorites.map((fav) => fav.activity.idActivity));  // Atualiza o contexto global
+      toggleRefreshFavorites();  // Notifica a mudança de favoritos
       Alert.alert("Sucesso", "Favorito removido com sucesso!");
     } catch (error) {
       console.error("Erro ao remover favorito:", error);

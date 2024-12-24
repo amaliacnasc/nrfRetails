@@ -62,7 +62,7 @@ export default function EventList({ selectedDate }: EventListProps) {
         });
 
         setFavorites((prevFavorites) => [...prevFavorites, event.idActivity]);
-        toggleRefreshFavorites();
+        toggleRefreshFavorites();  // Dispara o refresh no contexto
         Alert.alert('Favorito adicionado com sucesso!', `Evento: ${event.title}`);
       } else {
         Alert.alert('Erro', 'Usuário não autenticado. Por favor, faça login novamente.');
