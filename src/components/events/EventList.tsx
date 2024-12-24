@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { fetchEvents } from '@/services/eventService';
-//import { saveFavoriteEvent } from '@/services/favoriteService';
+import { fetchFavoriteEvents } from '@/services/favoriteService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import EventCard from './EventCard'; // Importando o componente EventCard
+import EventCard from './EventCard';
 import { Event } from '@/interfaces/eventInterface';
+import { SaveActivity } from '@/interfaces/savedEventsInterface';
 
 interface EventListProps {
   selectedDate: string;
@@ -13,17 +14,27 @@ interface EventListProps {
 
 export default function EventList({ selectedDate }: EventListProps) {
   const [events, setEvents] = useState<Event[]>([]);
+  const [favorites, setFavorites] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [userToken, setUserToken] = useState<string | null>(null);
 
   useEffect(() => {
     const initialize = async () => {
       try {
-        const token = await AsyncStorage.getItem('userToken');
-        setUserToken(token);
-        await loadEvents();
+        const storedParticipant = await AsyncStorage.getItem('participant');
+        if (storedParticipant) {
+          const participant = JSON.parse(storedParticipant);
+          const fetchedFavorites = await fetchFavoriteEvents(participant.idParticipant);
+
+          console.log('Favorites fetched from API:', fetchedFavorites);
+
+          // Extrair os IDs das atividades favoritas corretamente
+          setFavorites(fetchedFavorites.map((fav: SaveActivity) => fav.activity.idActivity));
+          await loadEvents();
+        } else {
+          Alert.alert('Erro', 'Usuário não autenticado. Por favor, faça login novamente.');
+        }
       } catch (error) {
-        //Alert.alert('Erro', 'Não foi possível inicializar os eventos.');
+        console.error('Erro ao inicializar:', error);
       }
     };
 
@@ -36,24 +47,14 @@ export default function EventList({ selectedDate }: EventListProps) {
       const fetchedEvents = await fetchEvents();
       setEvents(fetchedEvents);
     } catch (error) {
-      //Alert.alert('Erro', 'Não foi possível carregar os eventos.');
+      console.error('Erro ao carregar eventos:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSaveFavorite = async (event: Event) => {
-    if (!userToken) {
-    //Alert.alert('Erro', 'Usuário não está logado!');
-      return;
-    }
-
-    try {
-      //await saveFavoriteEvent(userToken, event);
-      Alert.alert('Sucesso', 'Evento adicionado aos favoritos!');
-    } catch (error) {
-    //  Alert.alert('Erro', 'Não foi possível favoritar o evento.');
-    }
+  const handleSaveFavorite = (event: Event) => {
+    Alert.alert('Favorito adicionado com sucesso!', `Evento: ${event.title}`);
   };
 
   const filteredEvents = selectedDate
@@ -86,13 +87,19 @@ export default function EventList({ selectedDate }: EventListProps) {
   return (
     <View className="p-4">
       <Text className="text-lg font-bold mb-4 text-gray-800">Sua programação</Text>
-      {filteredEvents.map((event) => (
-        <EventCard
-          key={event.idActivity}
-          event={event}
-          onFavorite={handleSaveFavorite}
-        />
-      ))}
+      {filteredEvents.map((event) => {
+        const isFavorite = favorites.includes(event.idActivity);
+        console.log('Is Favorite:', isFavorite, 'Event ID:', event.idActivity);
+
+        return (
+          <EventCard
+            key={event.idActivity}
+            event={event}
+            isFavorite={isFavorite}
+            onFavoriteSuccess={handleSaveFavorite}
+          />
+        );
+      })}
     </View>
   );
 }
