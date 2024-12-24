@@ -5,7 +5,7 @@ import { SaveActivity } from '@/interfaces/savedEventsInterface';
 
 interface FavoriteEventCardProps {
   favorite: SaveActivity;
-  onRemoveFavorite: (favorite: SaveActivity) => void; // Callback para desfavoritar
+  onRemoveFavorite: (favorite: SaveActivity) => void; 
 }
 
 export default function FavoriteEventCard({ favorite, onRemoveFavorite }: FavoriteEventCardProps) {

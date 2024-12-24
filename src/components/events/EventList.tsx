@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { fetchEvents } from '@/services/eventService';
-import { fetchFavoriteEvents } from '@/services/favoriteService';
+import { createFavoriteEvent, fetchFavoriteEvents } from '@/services/favoriteService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EventCard from './EventCard';
 import { Event } from '@/interfaces/eventInterface';
@@ -53,10 +53,27 @@ export default function EventList({ selectedDate }: EventListProps) {
     }
   };
 
-  const handleSaveFavorite = (event: Event) => {
-    Alert.alert('Favorito adicionado com sucesso!', `Evento: ${event.title}`);
+  const handleSaveFavorite = async (event: Event) => {
+    try {
+      const storedParticipant = await AsyncStorage.getItem("participant");
+      if (storedParticipant) {
+        const participant = JSON.parse(storedParticipant);
+        await createFavoriteEvent({
+          idParticipant: participant.idParticipant,
+          idActivity: event.idActivity,
+        });
+  
+        Alert.alert("Favorito adicionado com sucesso!", `Evento: ${event.title}`);
+  
+        setFavorites((prevFavorites) => [...prevFavorites, event.idActivity]);
+      } else {
+        Alert.alert("Erro", "Usuário não autenticado. Por favor, faça login novamente.");
+      }
+    } catch (error) {
+      console.error("Erro ao adicionar favorito:", error);
+      Alert.alert("Erro", "Não foi possível favoritar o evento.");
+    }
   };
-
   const filteredEvents = selectedDate
     ? events.filter((event) => {
         const eventDate = new Date(event.date).toISOString().slice(5, 10);

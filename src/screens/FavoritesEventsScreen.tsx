@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator, Alert, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Feather } from "@expo/vector-icons";
-import { fetchFavoriteEvents } from "@/services/favoriteService";
+import { fetchFavoriteEvents, deleteFavoriteEvent } from "@/services/favoriteService";
 import FavoriteEventCard from "@/components/events/FavoriteEventCard";
 
 export default function FavoriteEventsScreen() {
@@ -36,13 +36,26 @@ export default function FavoriteEventsScreen() {
   const loadFavorites = async (participantId: number) => {
     try {
       setLoading(true);
-      const fetchedFavorites = await fetchFavoriteEvents(participantId); // Busca favoritos diretamente
+      const fetchedFavorites = await fetchFavoriteEvents(participantId);
       setFavorites(fetchedFavorites);
     } catch (error) {
       Alert.alert("Erro", "Não foi possível carregar os favoritos.");
       console.error("Erro ao buscar favoritos:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRemoveFavorite = async (favorite: any) => {
+    try {
+      await deleteFavoriteEvent(favorite.idSaveActivity);
+      setFavorites((prevFavorites) =>
+        prevFavorites.filter((item) => item.idSaveActivity !== favorite.idSaveActivity)
+      );
+      Alert.alert("Sucesso", "Favorito removido com sucesso!");
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível remover o favorito.");
+      console.error("Erro ao remover favorito:", error);
     }
   };
 
@@ -70,17 +83,15 @@ export default function FavoriteEventsScreen() {
     <View className="p-4">
       <Text className="text-lg font-bold mb-4 text-gray-800">Seus eventos favoritos</Text>
       <FlatList
-  data={favorites}
-  renderItem={({ item }) => (
-    <FavoriteEventCard
-      favorite={item}
-      onRemoveFavorite={(favorite) => {
-        console.log("Removendo favorito:", favorite);
-      }}
-    />
-  )}
-  keyExtractor={(item) => item.idSaveActivity.toString()}
-/>
+        data={favorites}
+        renderItem={({ item }) => (
+          <FavoriteEventCard
+            favorite={item}
+            onRemoveFavorite={handleRemoveFavorite}
+          />
+        )}
+        keyExtractor={(item) => item.idSaveActivity.toString()}
+      />
     </View>
   );
 }
