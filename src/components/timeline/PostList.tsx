@@ -22,7 +22,6 @@ const PostList: React.FC<FetchPostsProps> = ({ posts, setPosts }) => {
       const data = await fetchPosts();
       setPosts(data);
     } catch {
-      Alert.alert('Erro', 'Não foi possível carregar os posts.');
     } finally {
       setLoading(false);
     }

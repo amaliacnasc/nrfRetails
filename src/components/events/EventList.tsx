@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, Alert } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 import { fetchEvents } from '@/services/eventService';
 import { saveFavoriteEvent } from '@/services/favoriteService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,9 +18,13 @@ export default function EventList({ selectedDate }: EventListProps) {
 
   useEffect(() => {
     const initialize = async () => {
-      const token = await AsyncStorage.getItem('userToken');
-      setUserToken(token);
-      await loadEvents();
+      try {
+        const token = await AsyncStorage.getItem('userToken');
+        setUserToken(token);
+        await loadEvents();
+      } catch (error) {
+        //Alert.alert('Erro', 'Não foi possível inicializar os eventos.');
+      }
     };
 
     initialize();
@@ -27,11 +32,11 @@ export default function EventList({ selectedDate }: EventListProps) {
 
   const loadEvents = async () => {
     try {
+      setLoading(true);
       const fetchedEvents = await fetchEvents();
       setEvents(fetchedEvents);
     } catch (error) {
-      console.error('Erro ao carregar eventos:', error);
-      Alert.alert('Erro', 'Não foi possível carregar os eventos.');
+      //Alert.alert('Erro', 'Não foi possível carregar os eventos.');
     } finally {
       setLoading(false);
     }
@@ -39,7 +44,7 @@ export default function EventList({ selectedDate }: EventListProps) {
 
   const handleSaveFavorite = async (event: Event) => {
     if (!userToken) {
-      Alert.alert('Erro', 'Usuário não está logado!');
+    //Alert.alert('Erro', 'Usuário não está logado!');
       return;
     }
 
@@ -47,8 +52,7 @@ export default function EventList({ selectedDate }: EventListProps) {
       await saveFavoriteEvent(userToken, event);
       Alert.alert('Sucesso', 'Evento adicionado aos favoritos!');
     } catch (error) {
-      console.error('Erro ao favoritar evento:', error);
-      Alert.alert('Erro', 'Não foi possível favoritar o evento.');
+    //  Alert.alert('Erro', 'Não foi possível favoritar o evento.');
     }
   };
 
@@ -61,29 +65,32 @@ export default function EventList({ selectedDate }: EventListProps) {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View className="flex-1 items-center justify-center">
         <ActivityIndicator size="large" color="#0056D6" />
-        <Text>Carregando eventos...</Text>
+        <Text className="mt-4 text-lg font-semibold text-gray-600">Carregando eventos...</Text>
       </View>
     );
   }
 
   if (filteredEvents.length === 0) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Não há eventos para essa data</Text>
+      <View className="flex-1 items-center justify-center p-4">
+        <Feather name="frown" size={48} color="#64748b" className="mb-4" />
+        <Text className="text-lg font-semibold text-gray-600">
+          Não há eventos disponíveis no momento
+        </Text>
       </View>
     );
   }
 
   return (
-    <View style={{ padding: 16 }}>
-      <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 16 }}>Sua programação</Text>
+    <View className="p-4">
+      <Text className="text-lg font-bold mb-4 text-gray-800">Sua programação</Text>
       {filteredEvents.map((event) => (
         <EventCard
           key={event.idActivity}
           event={event}
-          onFavorite={handleSaveFavorite} // Passa a função como prop
+          onFavorite={handleSaveFavorite}
         />
       ))}
     </View>
