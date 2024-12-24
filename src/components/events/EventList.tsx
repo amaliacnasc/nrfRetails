@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { fetchEvents } from '@/services/eventService';
-import { saveFavoriteEvent } from '@/services/favoriteService';
+//import { saveFavoriteEvent } from '@/services/favoriteService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EventCard from './EventCard'; // Importando o componente EventCard
 import { Event } from '@/interfaces/eventInterface';
@@ -49,7 +49,7 @@ export default function EventList({ selectedDate }: EventListProps) {
     }
 
     try {
-      await saveFavoriteEvent(userToken, event);
+      //await saveFavoriteEvent(userToken, event);
       Alert.alert('Sucesso', 'Evento adicionado aos favoritos!');
     } catch (error) {
     //  Alert.alert('Erro', 'Não foi possível favoritar o evento.');

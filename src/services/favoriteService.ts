@@ -1,33 +1,24 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Event } from '@/interfaces/eventInterface';
+import { CreateSaveActivity, SaveActivity } from "@/interfaces/savedEventsInterface";
+import api from "@/services/api";
 
-const FAVORITES_KEY = 'user_favorites';
 
-export const saveFavoriteEvent = async (userToken: string, event: Event): Promise<void> => {
+
+export const fetchFavoriteEvents = async (idParticipant: number): Promise<SaveActivity[]> => {
   try {
-    // Busca os favoritos armazenados no AsyncStorage
-    const storedFavorites = await AsyncStorage.getItem(FAVORITES_KEY);
-    const favorites = storedFavorites ? JSON.parse(storedFavorites) : {};
-
-    // Inicializa a lista de favoritos para o usuário, caso não exista
-    favorites[userToken] = favorites[userToken] || [];
-
-    // Verifica se o evento já está nos favoritos
-    const isAlreadyFavorite = favorites[userToken].some(
-      (favEvent: Event) => favEvent.idActivity === event.idActivity
-    );
-
-    if (!isAlreadyFavorite) {
-      // Adiciona o evento aos favoritos do usuário
-      favorites[userToken].push(event);
-
-      // Atualiza o AsyncStorage
-      await AsyncStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
-    } else {
-      console.log('Evento já está nos favoritos.');
-    }
+    const response = await api.get(`/appevento/save/participant/${idParticipant}`);
+    return response.data;
   } catch (error) {
-    console.error('Erro ao salvar evento favorito:', error);
+    console.error("Erro ao buscar favoritos:", error);
+    throw error;
+  }
+};
+
+export const createFavoriteEvent = async (saveActivityData: CreateSaveActivity): Promise<SaveActivity> => {
+  try {
+    const response = await api.post(`/appevento/save`, saveActivityData);
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao criar favorito:", error);
     throw error;
   }
 };

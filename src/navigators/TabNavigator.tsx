@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "@/screens/HomeScreen";
 import PostCard from "@/screens/PostScreen";
 import InfoScreen from "@/screens/InfoScreen";
+import FavoriteEventsScreen from "@/screens/FavoritesEventsScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -32,6 +33,8 @@ const TabNavigator = () => {
     >
       <Tab.Screen name="Início" component={HomeScreen} />
       <Tab.Screen name="Linha do Tempo" component={PostCard} />
+      <Tab.Screen name="Favoritos" component={FavoriteEventsScreen} />
+
       <Tab.Screen name="Informações" component={InfoScreen} />
     </Tab.Navigator>
   );
