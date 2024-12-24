@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import EventCard from './EventCard';
 import { Event } from '@/interfaces/eventInterface';
 import { SaveActivity } from '@/interfaces/savedEventsInterface';
+import { useFavorites } from '@/context/FavoritesContext';
 
 interface EventListProps {
   selectedDate: string;
@@ -14,32 +15,29 @@ interface EventListProps {
 
 export default function EventList({ selectedDate }: EventListProps) {
   const [events, setEvents] = useState<Event[]>([]);
-  const [favorites, setFavorites] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const { favorites, setFavorites, refreshFavorites, toggleRefreshFavorites } = useFavorites();
+
+  const initialize = async () => {
+    try {
+      const storedParticipant = await AsyncStorage.getItem('participant');
+      if (storedParticipant) {
+        const participant = JSON.parse(storedParticipant);
+        const fetchedFavorites = await fetchFavoriteEvents(participant.idParticipant);
+
+        setFavorites(fetchedFavorites.map((fav: SaveActivity) => fav.activity.idActivity));
+        await loadEvents();
+      } else {
+        Alert.alert('Erro', 'Usuário não autenticado. Por favor, faça login novamente.');
+      }
+    } catch (error) {
+      console.error('Erro ao inicializar:', error);
+    }
+  };
 
   useEffect(() => {
-    const initialize = async () => {
-      try {
-        const storedParticipant = await AsyncStorage.getItem('participant');
-        if (storedParticipant) {
-          const participant = JSON.parse(storedParticipant);
-          const fetchedFavorites = await fetchFavoriteEvents(participant.idParticipant);
-
-          console.log('Favorites fetched from API:', fetchedFavorites);
-
-          // Extrair os IDs das atividades favoritas corretamente
-          setFavorites(fetchedFavorites.map((fav: SaveActivity) => fav.activity.idActivity));
-          await loadEvents();
-        } else {
-          Alert.alert('Erro', 'Usuário não autenticado. Por favor, faça login novamente.');
-        }
-      } catch (error) {
-        console.error('Erro ao inicializar:', error);
-      }
-    };
-
     initialize();
-  }, []);
+  }, [refreshFavorites]);
 
   const loadEvents = async () => {
     try {
@@ -55,25 +53,26 @@ export default function EventList({ selectedDate }: EventListProps) {
 
   const handleSaveFavorite = async (event: Event) => {
     try {
-      const storedParticipant = await AsyncStorage.getItem("participant");
+      const storedParticipant = await AsyncStorage.getItem('participant');
       if (storedParticipant) {
         const participant = JSON.parse(storedParticipant);
         await createFavoriteEvent({
           idParticipant: participant.idParticipant,
           idActivity: event.idActivity,
         });
-  
-        Alert.alert("Favorito adicionado com sucesso!", `Evento: ${event.title}`);
-  
+
         setFavorites((prevFavorites) => [...prevFavorites, event.idActivity]);
+        toggleRefreshFavorites();
+        Alert.alert('Favorito adicionado com sucesso!', `Evento: ${event.title}`);
       } else {
-        Alert.alert("Erro", "Usuário não autenticado. Por favor, faça login novamente.");
+        Alert.alert('Erro', 'Usuário não autenticado. Por favor, faça login novamente.');
       }
     } catch (error) {
-      console.error("Erro ao adicionar favorito:", error);
-      Alert.alert("Erro", "Não foi possível favoritar o evento.");
+      console.error('Erro ao adicionar favorito:', error);
+      Alert.alert('Erro', 'Não foi possível favoritar o evento.');
     }
   };
+
   const filteredEvents = selectedDate
     ? events.filter((event) => {
         const eventDate = new Date(event.date).toISOString().slice(5, 10);
@@ -104,19 +103,14 @@ export default function EventList({ selectedDate }: EventListProps) {
   return (
     <View className="p-4">
       <Text className="text-lg font-bold mb-4 text-gray-800">Sua programação</Text>
-      {filteredEvents.map((event) => {
-        const isFavorite = favorites.includes(event.idActivity);
-        console.log('Is Favorite:', isFavorite, 'Event ID:', event.idActivity);
-
-        return (
-          <EventCard
-            key={event.idActivity}
-            event={event}
-            isFavorite={isFavorite}
-            onFavoriteSuccess={handleSaveFavorite}
-          />
-        );
-      })}
+      {filteredEvents.map((event) => (
+        <EventCard
+          key={event.idActivity}
+          event={event}
+          isFavorite={favorites.includes(event.idActivity)}
+          onFavoriteSuccess={handleSaveFavorite}
+        />
+      ))}
     </View>
   );
 }

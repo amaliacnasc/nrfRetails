@@ -4,11 +4,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Feather } from "@expo/vector-icons";
 import { fetchFavoriteEvents, deleteFavoriteEvent } from "@/services/favoriteService";
 import FavoriteEventCard from "@/components/events/FavoriteEventCard";
+import { useFavorites } from "@/context/FavoritesContext";
 
 export default function FavoriteEventsScreen() {
   const [favorites, setFavorites] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [idParticipant, setIdParticipant] = useState<number | null>(null);
+  const { setFavorites: updateContextFavorites, toggleRefreshFavorites } = useFavorites();
 
   useEffect(() => {
     const initialize = async () => {
@@ -25,8 +27,8 @@ export default function FavoriteEventsScreen() {
           Alert.alert("Erro", "Usuário não autenticado. Por favor, faça login novamente.");
         }
       } catch (error) {
+        console.error("Erro ao inicializar favoritos:", error);
         Alert.alert("Erro", "Não foi possível carregar os favoritos.");
-        console.error("Erro ao carregar favoritos:", error);
       }
     };
 
@@ -38,9 +40,10 @@ export default function FavoriteEventsScreen() {
       setLoading(true);
       const fetchedFavorites = await fetchFavoriteEvents(participantId);
       setFavorites(fetchedFavorites);
+      updateContextFavorites(fetchedFavorites.map((fav) => fav.activity.idActivity));
     } catch (error) {
-      Alert.alert("Erro", "Não foi possível carregar os favoritos.");
       console.error("Erro ao buscar favoritos:", error);
+      Alert.alert("Erro", "Não foi possível carregar os favoritos.");
     } finally {
       setLoading(false);
     }
@@ -49,49 +52,54 @@ export default function FavoriteEventsScreen() {
   const handleRemoveFavorite = async (favorite: any) => {
     try {
       await deleteFavoriteEvent(favorite.idSaveActivity);
-      setFavorites((prevFavorites) =>
-        prevFavorites.filter((item) => item.idSaveActivity !== favorite.idSaveActivity)
+      const updatedFavorites = favorites.filter(
+        (item) => item.idSaveActivity !== favorite.idSaveActivity
       );
+      setFavorites(updatedFavorites);
+      updateContextFavorites(updatedFavorites.map((fav) => fav.activity.idActivity));
+      toggleRefreshFavorites();
       Alert.alert("Sucesso", "Favorito removido com sucesso!");
     } catch (error) {
-      Alert.alert("Erro", "Não foi possível remover o favorito.");
       console.error("Erro ao remover favorito:", error);
+      Alert.alert("Erro", "Não foi possível remover o favorito.");
     }
   };
 
-  if (loading) {
-    return (
-      <View className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" color="#0056D6" />
-        <Text className="mt-4 text-lg font-semibold text-gray-600">Carregando favoritos...</Text>
-      </View>
-    );
-  }
+  const renderEmptyState = () => (
+    <View className="flex-1 items-center justify-center p-4">
+      <Feather name="frown" size={48} color="#64748b" />
+      <Text className="text-lg font-semibold text-gray-600">
+        Você ainda não favoritou nenhum evento.
+      </Text>
+    </View>
+  );
 
-  if (favorites.length === 0) {
-    return (
-      <View className="flex-1 items-center justify-center p-4">
-        <Feather name="frown" size={48} color="#64748b" className="mb-4" />
-        <Text className="text-lg font-semibold text-gray-600">
-          Você ainda não favoritou nenhum evento.
-        </Text>
-      </View>
-    );
-  }
+  const renderLoadingState = () => (
+    <View className="flex-1 items-center justify-center">
+      <ActivityIndicator size="large" color="#0056D6" />
+      <Text className="mt-4 text-lg font-semibold text-gray-600">Carregando favoritos...</Text>
+    </View>
+  );
 
   return (
-    <View className="p-4">
+    <View className="flex-1 p-4">
       <Text className="text-lg font-bold mb-4 text-gray-800">Seus eventos favoritos</Text>
-      <FlatList
-        data={favorites}
-        renderItem={({ item }) => (
-          <FavoriteEventCard
-            favorite={item}
-            onRemoveFavorite={handleRemoveFavorite}
-          />
-        )}
-        keyExtractor={(item) => item.idSaveActivity.toString()}
-      />
+      {loading ? (
+        renderLoadingState()
+      ) : favorites.length === 0 ? (
+        renderEmptyState()
+      ) : (
+        <FlatList
+          data={favorites}
+          renderItem={({ item }) => (
+            <FavoriteEventCard
+              favorite={item}
+              onRemoveFavorite={handleRemoveFavorite}
+            />
+          )}
+          keyExtractor={(item) => item.idSaveActivity.toString()}
+        />
+      )}
     </View>
   );
 }
