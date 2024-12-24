@@ -17,6 +17,8 @@ const TabNavigator = () => {
 
           if (route.name === "Início") {
             iconName = focused ? "home" : "home-outline";
+          } else if (route.name === "Favoritos") {
+            iconName = focused ? "bookmark" : "bookmark-outline"; // Ícone de favoritos
           } else if (route.name === "Linha do Tempo") {
             iconName = focused ? "git-network" : "git-network-outline";
           } else if (route.name === "Informações") {
@@ -32,9 +34,8 @@ const TabNavigator = () => {
       })}
     >
       <Tab.Screen name="Início" component={HomeScreen} />
-      <Tab.Screen name="Linha do Tempo" component={PostCard} />
       <Tab.Screen name="Favoritos" component={FavoriteEventsScreen} />
-
+      <Tab.Screen name="Linha do Tempo" component={PostCard} />
       <Tab.Screen name="Informações" component={InfoScreen} />
     </Tab.Navigator>
   );

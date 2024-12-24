@@ -22,3 +22,15 @@ export const createFavoriteEvent = async (saveActivityData: CreateSaveActivity):
     throw error;
   }
 };
+export const deleteFavoriteEvent = async (idSaveActivity: number): Promise<void> => {
+  try {
+    const response = await api.delete(`/appevento/save/${idSaveActivity}`);
+    if (response.status !== 204) {
+      throw new Error(`Erro ao deletar o favorito com ID ${idSaveActivity}`);
+    }
+    console.log(`Favorito com ID ${idSaveActivity} foi deletado com sucesso.`);
+  } catch (error) {
+    console.error(`Erro ao deletar favorito:`, error);
+    throw error;
+  }
+};

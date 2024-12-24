@@ -4,7 +4,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Feather } from "@expo/vector-icons";
 import { fetchFavoriteEvents } from "@/services/favoriteService";
 import FavoriteEventCard from "@/components/events/FavoriteEventCard";
-import { SaveActivity } from "@/interfaces/savedEventsInterface";
 
 export default function FavoriteEventsScreen() {
   const [favorites, setFavorites] = useState<any[]>([]);
@@ -71,12 +70,17 @@ export default function FavoriteEventsScreen() {
     <View className="p-4">
       <Text className="text-lg font-bold mb-4 text-gray-800">Seus eventos favoritos</Text>
       <FlatList
-        data={favorites}
-        renderItem={({ item }) => <FavoriteEventCard favorite={item} onFavorite={function (favorite: SaveActivity): void {
-            throw new Error("Function not implemented.");
-        } } />}
-        keyExtractor={(item) => item.idSaveActivity.toString()}
-      />
+  data={favorites}
+  renderItem={({ item }) => (
+    <FavoriteEventCard
+      favorite={item}
+      onRemoveFavorite={(favorite) => {
+        console.log("Removendo favorito:", favorite);
+      }}
+    />
+  )}
+  keyExtractor={(item) => item.idSaveActivity.toString()}
+/>
     </View>
   );
 }

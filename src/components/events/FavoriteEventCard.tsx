@@ -1,35 +1,46 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SaveActivity } from '@/interfaces/savedEventsInterface';
 
 interface FavoriteEventCardProps {
   favorite: SaveActivity;
-  onFavorite: (favorite: SaveActivity) => void;
+  onRemoveFavorite: (favorite: SaveActivity) => void; // Callback para desfavoritar
 }
 
-export default function FavoriteEventCard({ favorite, onFavorite }: FavoriteEventCardProps) {
+export default function FavoriteEventCard({ favorite, onRemoveFavorite }: FavoriteEventCardProps) {
   const { activity } = favorite;
   const formattedDate = activity.date.split('-').reverse().join('/');
 
+  const handleRemoveFavorite = () => {
+    Alert.alert(
+      'Remover Favorito',
+      `Deseja remover o evento "${activity.title}" dos favoritos?`,
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Remover', onPress: () => onRemoveFavorite(favorite) },
+      ]
+    );
+  };
+
   return (
     <View className="bg-white rounded-lg p-4 shadow-sm my-2">
-      {/* Título e botão de favoritar */}
+      {/* Título e botão de desfavoritar */}
       <View className="flex-row justify-between items-center mb-3">
         <Text className="text-lg font-bold text-gray-800">{activity.title}</Text>
-        <TouchableOpacity onPress={() => onFavorite(favorite)}>
-          <Feather name="bookmark" size={24} color="#0056D6" />
+        <TouchableOpacity onPress={handleRemoveFavorite}>
+          <MaterialCommunityIcons name="bookmark" size={24} color="#0056D6" /> 
         </TouchableOpacity>
       </View>
 
       {/* Data e Hora */}
       <View className="flex-row items-center mb-3">
         <View className="flex-row items-center mr-4">
-          <Feather name="calendar" size={20} color="#0056D6" />
+          <MaterialCommunityIcons name="calendar" size={20} color="#0056D6" />
           <Text className="ml-2 text-sm text-blue-600">{formattedDate}</Text>
         </View>
         <View className="flex-row items-center">
-          <Feather name="clock" size={20} color="#0056D6" />
+          <MaterialCommunityIcons name="clock" size={20} color="#0056D6" />
           <Text className="ml-2 text-sm text-blue-600">{activity.time}</Text>
         </View>
       </View>
@@ -40,7 +51,7 @@ export default function FavoriteEventCard({ favorite, onFavorite }: FavoriteEven
 
       {/* Localização */}
       <View className="flex-row items-center mb-3">
-        <Feather name="map-pin" size={20} color="#666" />
+        <MaterialCommunityIcons name="map-marker" size={20} color="#666" />
         <Text className="ml-2 text-sm text-gray-600">{activity.location}</Text>
       </View>
 
