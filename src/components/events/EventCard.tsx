@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Event } from '@/interfaces/eventInterface';
 
@@ -19,7 +19,7 @@ export default function EventCard({ event, isFavorite, onFavoriteSuccess }: Even
   };
 
   const handleAlreadyFavorite = () => {
-    Alert.alert('Favorito', 'Este evento já está nos favoritos!');
+    console.log('Este evento já está nos favoritos!');
   };
 
   return (

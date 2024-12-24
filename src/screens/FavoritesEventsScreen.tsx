@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ActivityIndicator, Alert, FlatList } from "react-native";
+import { View, Text, ActivityIndicator, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Feather } from "@expo/vector-icons";
 import { fetchFavoriteEvents, deleteFavoriteEvent } from "@/services/favoriteService";
@@ -24,26 +24,24 @@ export default function FavoriteEventsScreen() {
             await loadFavorites(participant.idParticipant);
           }
         } else {
-          Alert.alert("Erro", "Usuário não autenticado. Por favor, faça login novamente.");
+          console.error("Usuário não autenticado. Por favor, faça login novamente.");
         }
       } catch (error) {
         console.error("Erro ao inicializar favoritos:", error);
-        Alert.alert("Erro", "Não foi possível carregar os favoritos.");
       }
     };
 
     initialize();
-  }, [refreshFavorites]);  // Aqui estamos escutando a mudança do refreshFavorites
+  }, [refreshFavorites]);
 
   const loadFavorites = async (participantId: number) => {
     try {
       setLoading(true);
       const fetchedFavorites = await fetchFavoriteEvents(participantId);
       setFavorites(fetchedFavorites);
-      updateContextFavorites(fetchedFavorites.map((fav) => fav.activity.idActivity)); // Atualiza o contexto global
+      updateContextFavorites(fetchedFavorites.map((fav) => fav.activity.idActivity));
     } catch (error) {
       console.error("Erro ao buscar favoritos:", error);
-      Alert.alert("Erro", "Não foi possível carregar os favoritos.");
     } finally {
       setLoading(false);
     }
@@ -56,12 +54,10 @@ export default function FavoriteEventsScreen() {
         (item) => item.idSaveActivity !== favorite.idSaveActivity
       );
       setFavorites(updatedFavorites);
-      updateContextFavorites(updatedFavorites.map((fav) => fav.activity.idActivity));  // Atualiza o contexto global
-      toggleRefreshFavorites();  // Notifica a mudança de favoritos
-      Alert.alert("Sucesso", "Favorito removido com sucesso!");
+      updateContextFavorites(updatedFavorites.map((fav) => fav.activity.idActivity));
+      toggleRefreshFavorites();
     } catch (error) {
       console.error("Erro ao remover favorito:", error);
-      Alert.alert("Erro", "Não foi possível remover o favorito.");
     }
   };
 

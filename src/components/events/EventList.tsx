@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { fetchEvents } from '@/services/eventService';
 import { createFavoriteEvent, fetchFavoriteEvents } from '@/services/favoriteService';
@@ -24,11 +24,10 @@ export default function EventList({ selectedDate }: EventListProps) {
       if (storedParticipant) {
         const participant = JSON.parse(storedParticipant);
         const fetchedFavorites = await fetchFavoriteEvents(participant.idParticipant);
-
         setFavorites(fetchedFavorites.map((fav: SaveActivity) => fav.activity.idActivity));
         await loadEvents();
       } else {
-        Alert.alert('Erro', 'Usuário não autenticado. Por favor, faça login novamente.');
+        console.error('Usuário não autenticado. Por favor, faça login novamente.');
       }
     } catch (error) {
       console.error('Erro ao inicializar:', error);
@@ -60,16 +59,14 @@ export default function EventList({ selectedDate }: EventListProps) {
           idParticipant: participant.idParticipant,
           idActivity: event.idActivity,
         });
-
         setFavorites((prevFavorites) => [...prevFavorites, event.idActivity]);
-        toggleRefreshFavorites();  // Dispara o refresh no contexto
-        Alert.alert('Favorito adicionado com sucesso!', `Evento: ${event.title}`);
+        toggleRefreshFavorites();
+        console.log(`Favorito adicionado com sucesso! Evento: ${event.title}`);
       } else {
-        Alert.alert('Erro', 'Usuário não autenticado. Por favor, faça login novamente.');
+        console.error('Usuário não autenticado. Por favor, faça login novamente.');
       }
     } catch (error) {
       console.error('Erro ao adicionar favorito:', error);
-      Alert.alert('Erro', 'Não foi possível favoritar o evento.');
     }
   };
 

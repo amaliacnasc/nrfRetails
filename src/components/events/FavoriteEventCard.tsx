@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SaveActivity } from '@/interfaces/savedEventsInterface';
 
@@ -13,19 +13,11 @@ export default function FavoriteEventCard({ favorite, onRemoveFavorite }: Favori
   const formattedDate = activity.date.split('-').reverse().join('/');
 
   const handleRemoveFavorite = () => {
-    Alert.alert(
-      'Remover Favorito',
-      `Deseja remover o evento "${activity.title}" dos favoritos?`,
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        { text: 'Remover', onPress: () => onRemoveFavorite(favorite) },
-      ]
-    );
+    onRemoveFavorite(favorite);
   };
 
   return (
     <View className="bg-white rounded-lg p-4 shadow-sm my-2">
-      {/* Título e botão de desfavoritar */}
       <View className="flex-row justify-between items-center mb-3">
         <Text className="text-lg font-bold text-gray-800">{activity.title}</Text>
         <TouchableOpacity onPress={handleRemoveFavorite}>
@@ -33,7 +25,6 @@ export default function FavoriteEventCard({ favorite, onRemoveFavorite }: Favori
         </TouchableOpacity>
       </View>
 
-      {/* Data e Hora */}
       <View className="flex-row items-center mb-3">
         <View className="flex-row items-center mr-4">
           <MaterialCommunityIcons name="calendar" size={20} color="#0056D6" />
@@ -45,17 +36,14 @@ export default function FavoriteEventCard({ favorite, onRemoveFavorite }: Favori
         </View>
       </View>
 
-      {/* Descrição */}
       <Text className="text-base font-semibold text-gray-800 mb-2">Sobre</Text>
       <Text className="text-sm text-gray-600 mb-3">{activity.description}</Text>
 
-      {/* Localização */}
       <View className="flex-row items-center mb-3">
         <MaterialCommunityIcons name="map-marker" size={20} color="#666" />
         <Text className="ml-2 text-sm text-gray-600">{activity.location}</Text>
       </View>
 
-      {/* Palestrantes */}
       {activity.speaker && activity.speaker.length > 0 && (
         <>
           <Text className="text-base font-semibold text-gray-800 mb-2">Palestrantes</Text>
