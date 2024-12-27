@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, Button, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Event } from '@/interfaces/eventInterface';
+import EventModal from './EventModal';
 
 interface EventCardProps {
   event: Event;
   isFavorite: boolean;
   onFavoriteSuccess?: (event: Event) => void;
   onRemoveFavorite?: () => void;
-  onCheckin?: (event: Event) => void; // Função para check-in
+  onCheckin?: (event: Event) => void;
 }
 
 export default function EventCard({
@@ -37,7 +38,7 @@ export default function EventCard({
     if (onCheckin) {
       onCheckin(event);
     }
-    setModalVisible(false); // Fecha o modal após o check-in
+    setModalVisible(false);
   };
 
   return (
@@ -75,37 +76,12 @@ export default function EventCard({
         </View>
       </TouchableOpacity>
 
-      <Modal visible={isModalVisible} animationType="slide" onRequestClose={() => setModalVisible(false)}>
-        <ScrollView className="p-4 bg-white">
-          <Text className="text-xl font-bold text-gray-800 mb-4">{event.title}</Text>
-          <Text className="text-sm text-gray-600 mb-2">Data: {formattedDate}</Text>
-          <Text className="text-sm text-gray-600 mb-2">Hora: {event.time}</Text>
-          <Text className="text-base font-semibold text-gray-800 mb-2">Sobre</Text>
-          <Text className="text-sm text-gray-600 mb-4">{event.description}</Text>
-          <Text className="text-base font-semibold text-gray-800 mb-2">Endereço</Text>
-          <Text className="text-sm text-gray-600 mb-4">{event.location}</Text>
-          {event.speaker && event.speaker.length > 0 && (
-            <>
-              <Text className="text-base font-semibold text-gray-800 mb-2">Palestrantes</Text>
-              {event.speaker.map((speaker) => (
-                <View key={speaker.idSpeaker} className="mb-4">
-                  <Text className="text-sm font-bold text-gray-800">{speaker.name}</Text>
-                  <Text className="text-sm text-gray-600">{speaker.description}</Text>
-                  <Text className="text-sm text-gray-500">
-                    {speaker.role} - {speaker.company}
-                  </Text>
-                </View>
-              ))}
-            </>
-          )}
-          <View className="mt-4">
-            <Button title="Fazer Check-in" onPress={handleCheckin} color="#0056D6" />
-          </View>
-          <TouchableOpacity onPress={() => setModalVisible(false)} className="mt-6">
-            <Text className="text-sm text-blue-600 text-center">Fechar</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </Modal>
+      <EventModal
+        event={event}
+        isVisible={isModalVisible}
+        onClose={() => setModalVisible(false)}
+        onCheckin={handleCheckin}
+      />
     </>
   );
 }
