@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "nrfRetails",
-    "slug": "nrfRetails",
+    "slug": "rfnretails",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -22,7 +22,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.miguelamaral254.nrfRetails"
+      "package": "com.miguelamaral254.nrfRetails",
+      "versionCode": 2
     },
     "web": {
       "bundler": "metro",
@@ -34,9 +35,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "8144c803-e457-43ea-8921-e1de9f8bb27e"
+        "projectId": "7f56f8da-5504-49b3-bb9b-57f198875a8f"
       }
     },
-    "owner": "miguelamaral254"
+    "owner": "miguelsc254"
   }
 }
