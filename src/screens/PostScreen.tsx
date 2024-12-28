@@ -1,13 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Pressable, Text } from 'react-native';
 import { Post } from '@/interfaces/postInterface';
 import { HeaderTimeline } from '@/components/timeline/HeaderTimeline';
+import { fetchPosts } from '@/services/postService';
 import FetchPosts from '@/components/timeline/PostList';
 import CreatePostModal from '@/components/timeline/CreatePostModal';
 
 const PostScreen: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const loadPosts = async () => {
+    try {
+      const fetchedPosts = await fetchPosts();
+      setPosts(fetchedPosts);
+    } catch (error) {
+      console.error('Erro ao carregar posts:', error);
+    }
+  };
+
+  useEffect(() => {
+    loadPosts(); 
+  }, []);
 
   return (
     <View style={{ flex: 1 }}>
@@ -36,10 +50,11 @@ const PostScreen: React.FC = () => {
 
       <FetchPosts posts={posts} setPosts={setPosts} />
       <CreatePostModal
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        setPosts={setPosts}
-      />
+  modalVisible={modalVisible}
+  setModalVisible={setModalVisible}
+  setPosts={setPosts}
+  onPostCreated={loadPosts}
+/>
     </View>
   );
 };
