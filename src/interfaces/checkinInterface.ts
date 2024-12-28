@@ -6,7 +6,7 @@ export interface Checkin{
     idActivity: number 
     checkinDateTime: Date;
 }
-export interface CreateCheckinDTO {
+export interface CreateCheckin {
     idParticipant: number;
     idActivity: number;
 }

@@ -3,7 +3,7 @@ import api, { DEBUG_MODE } from "./api";
 
 export const fetchLikes = async (): Promise<Like[]> => {
   try {
-    const response = await api.get("/appevento//likes");
+    const response = await api.get("/appevento/likes");
     return response.data;
   } catch (error) {
     if (DEBUG_MODE) {
