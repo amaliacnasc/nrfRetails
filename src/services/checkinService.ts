@@ -36,3 +36,14 @@ export const fetchCheckinStatus = async (idEvent: number, idParticipant: number)
     throw error;
   }
 };
+export const fetchCheckinsByParticipant = async (idParticipant: number): Promise<Checkin[]> => {
+  try {
+    const response = await api.get(`/appevento/checkins/participant/${idParticipant}`);
+    return response.data;
+  } catch (error) {
+    if (DEBUG_MODE) {
+      console.error("Erro ao buscar check-ins do participante:", error);
+    }
+    throw error;
+  }
+};
