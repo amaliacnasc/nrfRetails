@@ -68,13 +68,16 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
       const participant = JSON.parse(storedParticipant);
       const idParticipant = participant.idParticipant;
 
-      const newPost = {
-        idParticipant,
-        imageUrl,
-        description,
-      };
+      const formData = new FormData();
+      formData.append('image', {
+        uri: imageUrl,
+        name: 'photo.jpg',
+        type: 'image/jpeg',
+      } as any);
+      formData.append('idParticipant', idParticipant);
+      formData.append('description', description);
 
-      const createdPost = await createPost(newPost);
+      const createdPost = await createPost(formData);
       setPosts((prevPosts) => [createdPost, ...prevPosts]);
       setModalVisible(false);
       setDescription('');

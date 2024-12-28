@@ -13,9 +13,11 @@ export const fetchPosts = async (): Promise<Post[]> => {
   }
 };
 
-export const createPost = async (newPost: CreatePost): Promise<Post> => {
+export const createPost = async (newPost: FormData): Promise<Post> => {
   try {
-    const response = await api.post('/appevento/posts', newPost);
+    const response = await api.post('/appevento/posts', newPost, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return response.data;
   } catch (error) {
     if (DEBUG_MODE) {
