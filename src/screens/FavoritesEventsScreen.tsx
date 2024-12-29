@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ActivityIndicator, FlatList } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Feather } from "@expo/vector-icons";
 import { fetchFavoriteEvents, deleteFavoriteEvent } from "@/services/favoriteService";
 import FavoriteEventCard from "@/components/events/FavoriteEventCard";
 import { useFavorites } from "@/context/FavoritesContext";
+import EventSkeleton from "@/components/events/EventSkeleton"; // Importação do EventSkeleton
 
 export default function FavoriteEventsScreen() {
   const [favorites, setFavorites] = useState<any[]>([]);
@@ -70,18 +71,11 @@ export default function FavoriteEventsScreen() {
     </View>
   );
 
-  const renderLoadingState = () => (
-    <View className="flex-1 items-center justify-center">
-      <ActivityIndicator size="large" color="#0056D6" />
-      <Text className="mt-4 text-lg font-semibold text-gray-600">Carregando favoritos...</Text>
-    </View>
-  );
-
   return (
     <View className="flex-1 p-4">
       <Text className="text-lg font-bold mb-4 text-gray-800">Seus eventos favoritos</Text>
       {loading ? (
-        renderLoadingState()
+        <EventSkeleton /> // Substituindo pelo componente EventSkeleton
       ) : favorites.length === 0 ? (
         renderEmptyState()
       ) : (
