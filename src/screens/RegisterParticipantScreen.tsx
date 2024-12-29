@@ -139,7 +139,7 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({ o
       <View className="mb-5">
         <TextInput
           className={`bg-white p-4 rounded-md text-base border ${errors.position ? 'border-red-500' : 'border-[#6e99df]'}`}
-          placeholder="Posição*"
+          placeholder="Cargo*"
           value={position}
           onChangeText={setPosition}
         />
