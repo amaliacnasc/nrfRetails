@@ -25,132 +25,137 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
       {/* Modal Principal */}
       <Modal
         animationType="slide"
-        transparent={true}
+        transparent={false}
         visible={visible}
         onRequestClose={onClose}
       >
-        <View className="flex-1 justify-center items-center bg-gray-500 bg-opacity-50">
-          <View className="bg-white p-6 rounded-lg w-80">
-            <Text className="text-lg font-bold mb-4">Hospedagem e Transporte</Text>
-            <View className="flex-row justify-around mt-4">
-              
+        <View className="flex-1 bg-white">
+          {/* Centralizar os Ícones */}
+          <View className="flex-1 justify-center items-center">
+            <Text className="text-2xl font-bold mb-6 text-center">Hospedagem e Transporte</Text>
+            <View className="flex-row justify-around w-full">
               <TouchableOpacity
                 className="items-center"
                 onPress={() => setFlightModalVisible(true)}
               >
-                <MaterialIcons name="flight" size={30} color="black" />
-                <Text className="text-center mt-2">Voo</Text>
+                <MaterialIcons name="flight" size={60} color="black" />
+                <Text className="text-center mt-2 text-lg">Voo</Text>
               </TouchableOpacity>
-              
               <TouchableOpacity
                 className="items-center"
                 onPress={() => setHotelModalVisible(true)}
               >
-                <MaterialIcons name="hotel" size={30} color="black" />
-                <Text className="text-center mt-2">Hospedagem</Text>
+                <MaterialIcons name="hotel" size={60} color="black" />
+                <Text className="text-center mt-2 text-lg">Hospedagem</Text>
               </TouchableOpacity>
-             
               <TouchableOpacity
                 className="items-center"
                 onPress={() => setTourismModalVisible(true)}
               >
-                <MaterialIcons name="directions-car" size={30} color="black" />
-                <Text className="text-center mt-2">Turismo</Text>
+                <MaterialIcons name="directions-car" size={60} color="black" />
+                <Text className="text-center mt-2 text-lg">Turismo</Text>
               </TouchableOpacity>
             </View>
+          </View>
+
+          {/* Botão de Fechar na Parte Inferior */}
+          <View className="absolute bottom-4 w-full px-4">
             <TouchableOpacity
               onPress={onClose}
-              className="mt-4 bg-blue-500 p-2 rounded-lg"
+              className="bg-blue-500 p-4 rounded-lg"
             >
-              <Text className="text-white text-center">Fechar</Text>
+              <Text className="text-white text-center text-lg">Fechar</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
 
+      {/* Submodais (mantidos como estão) */}
       {/* Submodal de Voo */}
       <Modal
         animationType="slide"
-        transparent={true}
+        transparent={false}
         visible={flightModalVisible}
         onRequestClose={() => setFlightModalVisible(false)}
       >
-        <View className="flex-1 justify-center items-center bg-gray-500 bg-opacity-50">
-          <View className="bg-white p-6 rounded-lg w-80">
-            <Text className="text-lg font-bold mb-4">Informações sobre Voos</Text>
-            <ScrollView>
-              {flightInfoData.map((flight, index) => (
-                <FlightInfoCard
-                  key={index}
-                  date={flight.date}
-                  description={flight.description}
-                />
-              ))}
-            </ScrollView>
+        <View className="flex-1 bg-white">
+          <Text className="text-2xl font-bold mb-4 text-center mt-4">Informações sobre Voos</Text>
+          <ScrollView className="flex-1 p-4">
+            {flightInfoData.map((flight, index) => (
+              <FlightInfoCard
+                key={index}
+                date={flight.date}
+                description={flight.description}
+              />
+            ))}
+          </ScrollView>
+          <View className="absolute bottom-4 w-full px-4">
             <TouchableOpacity
               onPress={() => setFlightModalVisible(false)}
-              className="mt-4 bg-blue-500 p-2 rounded-lg"
+              className="bg-blue-500 p-4 rounded-lg"
             >
-              <Text className="text-white text-center">Fechar</Text>
+              <Text className="text-white text-center text-lg">Fechar</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
 
+      {/* Submodal de Hospedagem */}
       <Modal
         animationType="slide"
-        transparent={true}
+        transparent={false}
         visible={hotelModalVisible}
         onRequestClose={() => setHotelModalVisible(false)}
       >
-        <View className="flex-1 justify-center items-center bg-gray-500 bg-opacity-50">
-          <View className="bg-white p-6 rounded-lg w-80">
-            <Text className="text-lg font-bold mb-4">Informações sobre Hospedagem</Text>
-            <ScrollView>
-              {hotelInfoData.map((hotel, index) => (
-                <HotelInfoCard
-                  key={index}
-                  hotelName={hotel.hotelName}
-                  address={hotel.address}
-                  checkIn={hotel.checkIn}
-                  checkOut={hotel.checkOut}
-                  services={hotel.services}
-                />
-              ))}
-            </ScrollView>
+        <View className="flex-1 bg-white">
+          <Text className="text-2xl font-bold mb-4 text-center mt-4">Informações sobre Hospedagem</Text>
+          <ScrollView className="flex-1 p-4">
+            {hotelInfoData.map((hotel, index) => (
+              <HotelInfoCard
+                key={index}
+                hotelName={hotel.hotelName}
+                address={hotel.address}
+                checkIn={hotel.checkIn}
+                checkOut={hotel.checkOut}
+                services={hotel.services}
+              />
+            ))}
+          </ScrollView>
+          <View className="absolute bottom-4 w-full px-4">
             <TouchableOpacity
               onPress={() => setHotelModalVisible(false)}
-              className="mt-4 bg-blue-500 p-2 rounded-lg"
+              className="bg-blue-500 p-4 rounded-lg"
             >
-              <Text className="text-white text-center">Fechar</Text>
+              <Text className="text-white text-center text-lg">Fechar</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
 
+      {/* Submodal de Turismo */}
       <Modal
         animationType="slide"
-        transparent={true}
+        transparent={false}
         visible={tourismModalVisible}
         onRequestClose={() => setTourismModalVisible(false)}
       >
-        <View className="flex-1 justify-center items-center bg-gray-500 bg-opacity-50">
-          <View className="bg-white p-6 rounded-lg w-80">
-            <Text className="text-lg font-bold mb-4">Informações sobre Turismo</Text>
-            <ScrollView>
-              {tourismInfoData.map((tourism, index) => (
-                <TourismInfoCard
-                  key={index}
-                  title={tourism.title}
-                  items={tourism.items}
-                />
-              ))}
-            </ScrollView>
+        <View className="flex-1 bg-white">
+          <Text className="text-2xl font-bold mb-4 text-center mt-4">Informações sobre Turismo</Text>
+          <ScrollView className="flex-1 p-4">
+            {tourismInfoData.map((tourism, index) => (
+              <TourismInfoCard
+                key={index}
+                title={tourism.title}
+                items={tourism.items}
+              />
+            ))}
+          </ScrollView>
+          <View className="absolute bottom-4 w-full px-4">
             <TouchableOpacity
               onPress={() => setTourismModalVisible(false)}
-              className="mt-4 bg-blue-500 p-2 rounded-lg"
+              className="bg-blue-500 p-4 rounded-lg"
             >
-              <Text className="text-white text-center">Fechar</Text>
+              <Text className="text-white text-center text-lg">Fechar</Text>
             </TouchableOpacity>
           </View>
         </View>

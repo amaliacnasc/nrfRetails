@@ -24,11 +24,13 @@ const MyCheckinsCard: React.FC<MyCheckinsCardProps> = ({ eventName, checkinDateT
   return (
     <View className="bg-white p-6 rounded-lg shadow-lg mb-4">
       <Text className="text-xl font-bold text-gray-800 mb-2">{`Evento: ${eventName}`}</Text>
-      <View className="flex-row gap-5 items-center mb-2">
+      <View className="flex-row align-center items-center mb-2">
         <Text>Data e Hora do checkin:</Text>
-        <Text className="text-sm text-gray-600"> {formattedDate}</Text>
-        <Text className="text-sm text-gray-600">{formattedTime}</Text>
-      </View>
+        <View className="flex-row items-center gap-2">
+          <Text className="text-sm text-gray-600"> {formattedDate}</Text>
+          <Text className="text-sm text-gray-600">{formattedTime}</Text>
+        </View>
+        </View>
     </View>
   );
 };

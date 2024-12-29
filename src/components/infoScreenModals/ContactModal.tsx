@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal, View, FlatList, Text, TouchableOpacity } from 'react-native';
+import { contactInfoData } from '../../mocks/contactsMocks'; 
 
 interface ContactModalProps {
   visible: boolean;
@@ -14,24 +15,24 @@ const ContactModal: React.FC<ContactModalProps> = ({ visible, onClose }) => {
       visible={visible}
       onRequestClose={onClose}
     >
-       <View className="flex-1 justify-center items-center bg-gray-500 bg-opacity-50">
-        <View className="bg-white p-6 rounded-lg w-80">
-          <Text className="text-lg font-bold mb-4">Contato com Coordenadores</Text>
+      <View className="flex-1 justify-center items-center bg-gray-500 bg-opacity-50">
+        <View className="bg-white w-11/12 h-5/7 p-6 rounded-lg shadow-lg">
+          <Text className="text-xl font-bold mb-4 text-center">Contatos dos Coordenadores</Text>
           <FlatList
-            data={[{ name: 'João Silva', phone: '123-456-789' }, { name: 'Maria Souza', phone: '987-654-321' }]} // Static list
+            data={contactInfoData} 
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <View className="flex-row items-center justify-between py-2 border-b border-gray-200">
-                <Text className="text-black">{item.name}</Text>
-                <Text className="text-gray-500">{item.phone}</Text>
+                <Text className="text-black text-lg font-semibold">{item.name}</Text>
+                <Text className="text-gray-500 text-lg">{item.phone}</Text>
               </View>
             )}
           />
           <TouchableOpacity
             onPress={onClose}
-            className="mt-4 bg-blue-500 p-2 rounded-lg"
+            className="mt-4 bg-blue-500 p-4 rounded-lg"
           >
-            <Text className="text-white text-center">Fechar</Text>
+            <Text className="text-white text-center text-lg">Fechar</Text>
           </TouchableOpacity>
         </View>
       </View>
