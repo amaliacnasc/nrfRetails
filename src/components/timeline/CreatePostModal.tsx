@@ -11,12 +11,15 @@ interface CreatePostModalProps {
   modalVisible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setPosts: React.Dispatch<React.SetStateAction<Post[]>>;
+  onPostCreated?: () => Promise<void>; 
+
 }
 
 const CreatePostModal: React.FC<CreatePostModalProps> = ({
   modalVisible,
   setModalVisible,
   setPosts,
+  onPostCreated, 
 }) => {
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
@@ -57,29 +60,29 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
       Alert.alert('Erro', 'Preencha todos os campos antes de postar.');
       return;
     }
-
     try {
       const storedParticipant = await AsyncStorage.getItem('participant');
       if (!storedParticipant) {
         Alert.alert('Erro', 'Usuário não encontrado. Faça login novamente.');
         return;
       }
-
       const participant = JSON.parse(storedParticipant);
       const idParticipant = participant.idParticipant;
-
-      const newPost = {
-        idParticipant,
-        imageUrl,
-        description,
-      };
-
-      const createdPost = await createPost(newPost);
+      const formData = new FormData();
+      formData.append('image', {
+        uri: imageUrl,
+        name: 'photo.jpg',
+        type: 'image/jpeg',
+      } as any);
+      formData.append('idParticipant', idParticipant);
+      formData.append('description', description);
+      const createdPost = await createPost(formData);
       setPosts((prevPosts) => [createdPost, ...prevPosts]);
       setModalVisible(false);
       setDescription('');
       setImageUrl(undefined);
-    } catch {
+      if (onPostCreated) await onPostCreated();
+    } catch (error) {
       Alert.alert('Erro', 'Não foi possível criar o post.');
     }
   };
@@ -90,7 +93,6 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
         <Pressable onPress={() => setModalVisible(false)}>
           <AntDesign name="left" size={24} color="#054FC7" className="mb-4" />
         </Pressable>
-
         <View className="mb-4">
           <Text className="font-bold text-lg">Descrição</Text>
           <TextInput
@@ -100,23 +102,17 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
             className="mt-2 p-2 border border-gray-300 rounded bg-gray-100"
           />
         </View>
-
-        {imageUrl && (
-          <Image source={{ uri: imageUrl }} className="w-full h-52 mb-4 rounded" />
-        )}
-
+        {imageUrl && <Image source={{ uri: imageUrl }} className="w-full h-52 mb-4 rounded" />}
         <View className="flex-row justify-between mb-4">
           <Pressable onPress={openImagePicker} className="items-center">
             <MaterialCommunityIcons name="view-gallery-outline" size={32} color="#60a5fa" />
             <Text>Galeria</Text>
           </Pressable>
-
           <Pressable onPress={openCamera} className="items-center">
             <MaterialCommunityIcons name="camera-outline" size={32} color="#60a5fa" />
             <Text>Câmera</Text>
           </Pressable>
         </View>
-
         <Pressable
           onPress={handleCreatePost}
           className="bg-black px-4 py-3 rounded-lg items-center"

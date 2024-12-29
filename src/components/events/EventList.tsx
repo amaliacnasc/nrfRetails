@@ -139,6 +139,8 @@ export default function EventList({ selectedDate }: EventListProps) {
           isFavorite={favorites.includes(event.idActivity)}
           onFavoriteSuccess={handleSaveFavorite}
           onRemoveFavorite={() => handleRemoveFavorite(event.idActivity, favoriteSaveIds[event.idActivity])}
+          loadEvents={loadEvents} 
+
         />
       ))}
     </View>

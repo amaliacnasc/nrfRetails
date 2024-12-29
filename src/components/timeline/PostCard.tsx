@@ -25,7 +25,6 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           setIdParticipant(participant.idParticipant);
         }
       } catch (error) {
-       // Alert.alert("Erro", "Não foi possível recuperar o ID do participante.");
       }
     };
 
