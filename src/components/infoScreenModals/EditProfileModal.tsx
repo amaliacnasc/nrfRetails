@@ -7,8 +7,8 @@ interface EditProfileModalProps {
     nome: string;
     email: string;
     empresa: string;
-    position: string; // Certifique-se de que é 'position'
-    contact: string; // Certifique-se de que é 'contact'
+    position: string; 
+    contact: string; 
   };
   onClose: () => void;
   onSave: () => void;

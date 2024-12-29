@@ -95,7 +95,6 @@ const InfoScreen: React.FC = () => {
       console.error("Erro ao sair da conta:", error);
     }
   };
-
   return (
     <ScrollView className="flex-1 bg-gray-100 px-4">
       <View className="p-4">
@@ -104,14 +103,14 @@ const InfoScreen: React.FC = () => {
         </Text>
         <View className="border-b border-gray-300 mt-4" />
       </View>
-
+  
       <View className="items-center mt-4 mb-6">
         <Text className="text-lg font-semibold text-black">
           {formData.nome}
         </Text>
         <Text className="text-sm text-gray-500">{formData.email}</Text>
       </View>
-
+  
       <View className="bg-white p-4 rounded-lg shadow mb-4">
         <Text className="text-lg font-bold text-black mb-2">Minha Conta</Text>
         <TouchableOpacity
@@ -123,7 +122,7 @@ const InfoScreen: React.FC = () => {
           <MaterialIcons name="keyboard-arrow-right" size={20} color="black" />
         </TouchableOpacity>
       </View>
-
+  
       <View className="bg-white p-4 rounded-lg shadow mb-4">
         <Text className="text-lg font-bold text-black mb-2">
           Central de Atendimento
@@ -169,14 +168,15 @@ const InfoScreen: React.FC = () => {
           <MaterialIcons name="keyboard-arrow-right" size={20} color="black" />
         </TouchableOpacity>
       </View>
-
+  
       <TouchableOpacity
         onPress={handleLogout}
         className="border border-red-500 bg-transparent p-4 rounded-lg items-center my-16"
       >
         <Text className="text-red-500 font-bold">Sair da Conta</Text>
       </TouchableOpacity>
-
+  
+      {/* Modais */}
       <ContactModal
         visible={modalContactVisible}
         onClose={() => setModalContactVisible(false)}
@@ -201,11 +201,10 @@ const InfoScreen: React.FC = () => {
         handleInputChange={handleInputChange}
       />
       <MyCheckinsModal
-  visible={modalMyCheckinsVisible}
-  onClose={() => setModalMyCheckinsVisible(false)}
-/>
+        visible={modalMyCheckinsVisible}
+        onClose={() => setModalMyCheckinsVisible(false)}
+      />
     </ScrollView>
-  );
-};
+  );};
 
 export default InfoScreen;
