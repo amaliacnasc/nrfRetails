@@ -36,3 +36,13 @@ export const fetchLikesCount = async (idPost: number): Promise<number> => {
     throw error;
   }
 };
+export const deleteLike = async (idLike: number): Promise<void> => {
+  try {
+    await api.delete(`/appevento/likes/${idLike}`);
+  } catch (error) {
+    if (DEBUG_MODE) {
+      console.error("Erro ao deletar like:", error);
+    }
+    throw error;
+  }
+};
