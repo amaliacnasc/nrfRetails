@@ -11,18 +11,19 @@ interface CreatePostModalProps {
   modalVisible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setPosts: React.Dispatch<React.SetStateAction<Post[]>>;
-  onPostCreated?: () => Promise<void>; 
-
+  onPostCreated?: () => Promise<void>;
 }
 
 const CreatePostModal: React.FC<CreatePostModalProps> = ({
   modalVisible,
   setModalVisible,
   setPosts,
-  onPostCreated, 
+  onPostCreated,
 }) => {
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
+
+  const MAX_CHARACTERS = 1000;
 
   const openImagePicker = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -58,6 +59,10 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
   const handleCreatePost = async () => {
     if (!description || !imageUrl) {
       Alert.alert('Erro', 'Preencha todos os campos antes de postar.');
+      return;
+    }
+    if (description.length > MAX_CHARACTERS) {
+      Alert.alert('Erro', 'A descrição excede o limite de 1000 caracteres.');
       return;
     }
     try {
@@ -99,8 +104,18 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
             placeholder="Insira a descrição"
             value={description}
             onChangeText={setDescription}
-            className="mt-2 p-2 border border-gray-300 rounded bg-gray-100"
+            multiline
+            className={`mt-2 p-2 border rounded bg-gray-100 ${
+              description.length > MAX_CHARACTERS ? 'border-red-500' : 'border-gray-300'
+            }`}
           />
+          <Text
+            className={`text-right mt-1 font-medium ${
+              description.length > MAX_CHARACTERS ? 'text-red-500' : 'text-gray-500'
+            }`}
+          >
+            {MAX_CHARACTERS - description.length}/{MAX_CHARACTERS}
+          </Text>
         </View>
         {imageUrl && <Image source={{ uri: imageUrl }} className="w-full h-52 mb-4 rounded" />}
         <View className="flex-row justify-between mb-4">
@@ -115,7 +130,10 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({
         </View>
         <Pressable
           onPress={handleCreatePost}
-          className="bg-black px-4 py-3 rounded-lg items-center"
+          className={`px-4 py-3 rounded-lg items-center ${
+            description.length > MAX_CHARACTERS ? 'bg-gray-400' : 'bg-blue-500'
+          }`}
+          disabled={description.length > MAX_CHARACTERS}
         >
           <Text className="text-white font-bold">Postar</Text>
         </Pressable>

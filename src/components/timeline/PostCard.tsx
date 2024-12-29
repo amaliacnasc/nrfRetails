@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, Pressable, Alert } from 'react-native';
+import { View, Text, Image, Pressable } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Post } from '@/interfaces/postInterface';
 import { AntDesign } from '@expo/vector-icons';
-import { createLike } from '@/services/likeService';
+import { createLike, deleteLike } from '@/services/likeService';
 
 interface PostCardProps {
   post: Post;
+  likedByUser: boolean;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post }) => {
-  const [likes, setLikes] = useState<number>(
-    Array.isArray(post.likes) ? post.likes.length : post.likes || 0
-  );
-  const [liked, setLiked] = useState<boolean>(false);
+const PostCard: React.FC<PostCardProps> = ({ post, likedByUser }) => {
+  const [likes, setLikes] = useState<number>(Array.isArray(post.likes) ? post.likes.length : 0);
+  const [liked, setLiked] = useState<boolean>(!!likedByUser);
   const [idParticipant, setIdParticipant] = useState<number | null>(null);
+  const [expanded, setExpanded] = useState<boolean>(false);
+
+  const MAX_DESCRIPTION_LENGTH = 100;
 
   useEffect(() => {
     const fetchParticipantId = async () => {
@@ -25,38 +27,41 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           setIdParticipant(participant.idParticipant);
         }
       } catch (error) {
+        console.error('Erro ao buscar participante:', error);
       }
     };
 
     fetchParticipantId();
   }, []);
 
-  useEffect(() => {
-    if (
-      idParticipant &&
-      Array.isArray(post.likes) &&
-      post.likes.some((like) => like.participant?.idParticipant === idParticipant)
-    ) {
-      setLiked(true);
-    }
-  }, [post.likes, idParticipant]);
-
   const handleLike = async () => {
     if (!idParticipant) {
-    //  Alert.alert("Erro", "ID do participante não encontrado.");
+      console.error("ID do participante não encontrado.");
       return;
     }
 
     try {
-      if (!liked) {
-        await createLike({ idPost: post.idPost, idParticipant });
-        setLikes((prev) => prev + 1);
-      } else {
-        setLikes((prev) => prev - 1);
-      }
-      setLiked(!liked);
+      await createLike({ idPost: post.idPost, idParticipant });
+      setLikes((prev) => prev + 1);
+      setLiked(true);
     } catch (error) {
-      //Alert.alert("Erro", "Não foi possível atualizar o like.");
+      console.error("Não foi possível adicionar o like.");
+    }
+  };
+
+  const handleUnlike = async () => {
+    try {
+      const likeToRemove = post.likes?.find(
+        (like) => like.participant?.idParticipant === idParticipant
+      );
+
+      if (likeToRemove) {
+        await deleteLike(likeToRemove.idLike);
+        setLikes((prev) => prev - 1);
+        setLiked(false);
+      }
+    } catch (error) {
+      console.error("Não foi possível remover o like.");
     }
   };
 
@@ -66,12 +71,23 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         <Image source={{ uri: post.imageUrl }} className="w-full h-52" />
       )}
       <View className="p-4 relative">
-        <Text className="text-gray-800 font-bold text-lg mb-2">{post.description}</Text>
-        <Text className="text-gray-500 text-sm">
+        <Text className="text-gray-800 font-bold text-lg mb-2">
+          {expanded || post.description.length <= MAX_DESCRIPTION_LENGTH
+            ? post.description
+            : `${post.description.slice(0, MAX_DESCRIPTION_LENGTH)}...`}
+        </Text>
+        {post.description.length > MAX_DESCRIPTION_LENGTH && (
+          <Pressable onPress={() => setExpanded(!expanded)}>
+            <Text className="text-blue-500 font-medium">
+              {expanded ? 'Ver menos' : 'Ver mais'}
+            </Text>
+          </Pressable>
+        )}
+        <Text className="text-gray-500 text-sm mt-2">
           {`Autor: ${post.participant.name} (${post.participant.companyName})`}
         </Text>
         <Pressable
-          onPress={handleLike}
+          onPress={liked ? handleUnlike : handleLike}
           className="absolute bottom-2 right-2 flex-row items-center"
         >
           <AntDesign

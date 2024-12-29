@@ -15,7 +15,7 @@ const PostScreen: React.FC = () => {
       const fetchedPosts = await fetchPosts();
       setPosts(fetchedPosts);
     } catch (error) {
-      console.error('Erro ao carregar posts:', error);
+      //console.error('Erro ao carregar posts:', error);
     }
   };
 

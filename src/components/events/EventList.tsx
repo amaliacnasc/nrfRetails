@@ -8,6 +8,7 @@ import EventCard from './EventCard';
 import { Event } from '@/interfaces/eventInterface';
 import { SaveActivity } from '@/interfaces/savedEventsInterface';
 import { useFavorites } from '@/context/FavoritesContext';
+import EventSkeleton from './EventSkeleton';
 
 interface EventListProps {
   selectedDate: string;
@@ -109,14 +110,13 @@ export default function EventList({ selectedDate }: EventListProps) {
       })
     : events;
 
-  if (loading) {
-    return (
-      <View className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" color="#0056D6" />
-        <Text className="mt-4 text-lg font-semibold text-gray-600">Carregando eventos...</Text>
-      </View>
-    );
-  }
+    if (loading) {
+      return (
+        <View className="flex-1">
+          <EventSkeleton />
+        </View>
+      );
+    }
 
   if (filteredEvents.length === 0) {
     return (
