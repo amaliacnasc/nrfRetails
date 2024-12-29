@@ -7,7 +7,7 @@ export const fetchPosts = async (): Promise<Post[]> => {
     return response.data;
   } catch (error) {
     if (DEBUG_MODE) {
-      console.error('Erro ao buscar posts:', error);
+     // console.error('Erro ao buscar posts:', error);
     }
     throw error;
   }
@@ -21,7 +21,7 @@ export const createPost = async (newPost: FormData): Promise<Post> => {
     return response.data;
   } catch (error) {
     if (DEBUG_MODE) {
-      console.error('Erro ao criar post:', error);
+      // console.error('Erro ao criar post:', error);
     }
     throw error;
   }

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { fetchPosts } from '@/services/postService';
 import { Post } from '@/interfaces/postInterface';
 import PostCard from './PostCard';
+import PostSkeleton from './PostSkeleton';
 
 interface FetchPostsProps {
   posts: Post[];
@@ -21,25 +22,19 @@ const PostList: React.FC<FetchPostsProps> = ({ posts, setPosts }) => {
     try {
       const data = await fetchPosts();
       setPosts(data);
-    } catch {
     } finally {
       setLoading(false);
     }
   };
 
   if (loading) {
-    return (
-      <View className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" color="#0056D6" />
-        <Text className="mt-4 text-lg font-semibold text-gray-600">Carregando posts...</Text>
-      </View>
-    );
+    return <PostSkeleton />;
   }
 
   if (posts.length === 0) {
     return (
       <View className="flex-1 items-center justify-center p-4">
-        <Feather name="frown" size={48} color="#64748b" className="mb-4" />
+        <Feather name="frown" size={48} color="#64748b" />
         <Text className="text-lg font-semibold text-gray-600">Ainda não há posts</Text>
       </View>
     );

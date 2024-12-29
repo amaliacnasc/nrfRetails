@@ -5,7 +5,7 @@ import { Feather } from "@expo/vector-icons";
 import { fetchFavoriteEvents, deleteFavoriteEvent } from "@/services/favoriteService";
 import FavoriteEventCard from "@/components/events/FavoriteEventCard";
 import { useFavorites } from "@/context/FavoritesContext";
-import EventSkeleton from "@/components/events/EventSkeleton"; // Importação do EventSkeleton
+import EventSkeleton from "@/components/events/EventSkeleton"; 
 
 export default function FavoriteEventsScreen() {
   const [favorites, setFavorites] = useState<any[]>([]);
@@ -39,6 +39,7 @@ export default function FavoriteEventsScreen() {
     try {
       setLoading(true);
       const fetchedFavorites = await fetchFavoriteEvents(participantId);
+      console.log(fetchedFavorites); 
       setFavorites(fetchedFavorites);
       updateContextFavorites(fetchedFavorites.map((fav) => fav.activity.idActivity));
     } catch (error) {
@@ -75,7 +76,7 @@ export default function FavoriteEventsScreen() {
     <View className="flex-1 p-4">
       <Text className="text-lg font-bold mb-4 text-gray-800">Seus eventos favoritos</Text>
       {loading ? (
-        <EventSkeleton /> // Substituindo pelo componente EventSkeleton
+        <EventSkeleton />
       ) : favorites.length === 0 ? (
         renderEmptyState()
       ) : (
