@@ -49,6 +49,17 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
     }
   };
 
+  const handleClose = () => {
+    setName('');
+    setEmail('');
+    setPosition('');
+    setContact('');
+    setCompanyName('');
+    setSelectedAreas([]);
+    setErrors({});
+    onClose(); // Fecha o modal
+  };
+
   const handleSubmit = async () => {
     const newErrors: { [key: string]: boolean } = {};
     if (!name.trim()) newErrors.name = true;
@@ -58,28 +69,23 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
     if (selectedAreas.length === 0) newErrors.selectedAreas = true;
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
-  
-    const sanitizedContact = contact.replace(/[^0-9]/g, ''); // Remove caracteres não numéricos
-  
+
+    const sanitizedContact = contact.replace(/[^0-9]/g, '');
+
     const participantData: CreateParticipant = {
       name,
       email,
       position,
-      contact: sanitizedContact, // Envia o valor sem formatação
+      contact: sanitizedContact,
       companyName: companyName || undefined,
       idArea: selectedAreas,
       postPermission: 0,
     };
-  
+
     setLoading(true);
     try {
       await createParticipant(participantData);
-      setName('');
-      setEmail('');
-      setPosition('');
-      setContact('');
-      setCompanyName('');
-      setSelectedAreas([]);
+      handleClose(); // Fecha e limpa os campos ao concluir
       onRegisterSuccess(email);
     } catch (error) {
       console.error(error);
@@ -106,6 +112,8 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
           <Text className="text-2xl font-bold text-[#04378b] text-center mb-8">
             Cadastro de Participante
           </Text>
+          {/* Campos do Formulário */}
+          {/* Nome */}
           <View className="mb-5">
             <TextInput
               className={`bg-white p-4 rounded-md text-base border ${
@@ -117,6 +125,7 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
             />
             {errors.name && <Text className="text-red-500 text-sm mt-1">Nome é obrigatório.</Text>}
           </View>
+          {/* Email */}
           <View className="mb-5">
             <TextInput
               className={`bg-white p-4 rounded-md text-base border ${
@@ -130,6 +139,7 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
             />
             {errors.email && <Text className="text-red-500 text-sm mt-1">Email é obrigatório.</Text>}
           </View>
+          {/* Cargo */}
           <View className="mb-5">
             <TextInput
               className={`bg-white p-4 rounded-md text-base border ${
@@ -144,28 +154,29 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
             )}
           </View>
           <View className="mb-5">
-          <TextInputMask
-  type="custom"
-  options={{
-    mask: '(99) 9 9999-9999',
-  }}
-  style={{
-    backgroundColor: 'white',
-    padding: 16,
-    borderRadius: 8,
-    fontSize: 14,
-    borderWidth: 1,
-    borderColor: errors.contact ? 'red' : '#6e99df',
-  }}
-  placeholder="Contato*"
-  value={contact}
-  onChangeText={setContact}
-  keyboardType="phone-pad"
-/>
+            <TextInputMask
+              type="custom"
+              options={{
+                mask: '(99) 9 9999-9999',
+              }}
+              style={{
+                backgroundColor: 'white',
+                padding: 16,
+                borderRadius: 8,
+                fontSize: 14,
+                borderWidth: 1,
+                borderColor: errors.contact ? 'red' : '#6e99df',
+              }}
+              placeholder="Contato*"
+              value={contact}
+              onChangeText={setContact}
+              keyboardType="phone-pad"
+            />
             {errors.contact && (
               <Text className="text-red-500 text-sm mt-1">Contato é obrigatório.</Text>
             )}
           </View>
+          {/* Nome da Empresa */}
           <View className="mb-5">
             <TextInput
               className="bg-white p-4 rounded-md text-base border border-[#6e99df]"
@@ -227,8 +238,9 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
               <Text className="text-red-500 text-sm mt-1">Selecione pelo menos uma área.</Text>
             )}
           </View>
+         
           <TouchableOpacity
-            className={`bg-[#0056D6] p-4 rounded-md items-center mt-8 ${
+            className={`bg-[#0056D6] p-4 rounded-md items-center mt-4 ${
               loading ? 'opacity-60' : ''
             }`}
             onPress={handleSubmit}
@@ -240,6 +252,12 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
               <Text className="text-white text-lg font-semibold">Cadastrar</Text>
             )}
           </TouchableOpacity>
+          <TouchableOpacity
+            className=" p-4 rounded-md items-center mt-4"
+            onPress={handleClose}
+          >
+            <Text className="text-blue-500 text-lg font-semibold">Fechar</Text>
+          </TouchableOpacity>
         </View>
       }
     />
@@ -247,3 +265,8 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
 };
 
 export default RegisterParticipantScreen;
+
+
+
+
+
