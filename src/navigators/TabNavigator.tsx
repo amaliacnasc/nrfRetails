@@ -18,7 +18,7 @@ const TabNavigator = () => {
           if (route.name === "Início") {
             iconName = focused ? "home" : "home-outline";
           } else if (route.name === "Favoritos") {
-            iconName = focused ? "bookmark" : "bookmark-outline"; // Ícone de favoritos
+            iconName = focused ? "bookmark" : "bookmark-outline"; 
           } else if (route.name === "Linha do Tempo") {
             iconName = focused ? "git-network" : "git-network-outline";
           } else if (route.name === "Informações") {

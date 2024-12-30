@@ -1,15 +1,14 @@
-// src/screens/RegisterParticipantScreen.tsx
-
 import React, { useEffect, useState } from 'react';
 import {
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
   View,
   ActivityIndicator,
+  FlatList,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import MultiSelect from 'react-native-multiple-select';
+import { TextInputMask } from 'react-native-masked-text';
 import { AreaOfExpertiseDTO } from '../interfaces/areaOfExpertiseInterface';
 import { CreateParticipant } from '../interfaces/participantInterface';
 import { createParticipant } from '../services/participantService';
@@ -20,16 +19,19 @@ interface RegisterParticipantScreenProps {
   onRegisterSuccess: (email: string) => void;
 }
 
-const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({ onClose, onRegisterSuccess }) => {
-  const [name, setName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [position, setPosition] = useState<string>('');
-  const [contact, setContact] = useState<string>('');
-  const [companyName, setCompanyName] = useState<string>('');
+const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
+  onClose,
+  onRegisterSuccess,
+}) => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [position, setPosition] = useState('');
+  const [contact, setContact] = useState('');
+  const [companyName, setCompanyName] = useState('');
   const [areas, setAreas] = useState<AreaOfExpertiseDTO[]>([]);
   const [selectedAreas, setSelectedAreas] = useState<number[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [areasLoading, setAreasLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(false);
+  const [areasLoading, setAreasLoading] = useState(true);
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
@@ -42,18 +44,20 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({ o
       setAreas(data);
     } catch (error) {
       console.error(error);
-      // Alert.alert('Erro', 'Não foi possível carregar as áreas de especialização.');
     } finally {
       setAreasLoading(false);
     }
   };
 
-  const toggleAreaSelection = (idArea: number) => {
-    if (selectedAreas.includes(idArea)) {
-      setSelectedAreas(selectedAreas.filter((id) => id !== idArea));
-    } else {
-      setSelectedAreas([...selectedAreas, idArea]);
-    }
+  const handleClose = () => {
+    setName('');
+    setEmail('');
+    setPosition('');
+    setContact('');
+    setCompanyName('');
+    setSelectedAreas([]);
+    setErrors({});
+    onClose(); // Fecha o modal
   };
 
   const handleSubmit = async () => {
@@ -63,37 +67,28 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({ o
     if (!position.trim()) newErrors.position = true;
     if (!contact.trim()) newErrors.contact = true;
     if (selectedAreas.length === 0) newErrors.selectedAreas = true;
-
     setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
 
-    if (Object.keys(newErrors).length > 0) {
-      return;
-    }
+    const sanitizedContact = contact.replace(/[^0-9]/g, '');
 
     const participantData: CreateParticipant = {
       name,
       email,
       position,
-      contact,
-      companyName: companyName ? companyName : undefined,
+      contact: sanitizedContact,
+      companyName: companyName || undefined,
       idArea: selectedAreas,
       postPermission: 0,
     };
 
     setLoading(true);
-
     try {
       await createParticipant(participantData);
-      setName('');
-      setEmail('');
-      setPosition('');
-      setContact('');
-      setCompanyName('');
-      setSelectedAreas([]);
+      handleClose(); // Fecha e limpa os campos ao concluir
       onRegisterSuccess(email);
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
-      // Alert.alert('Erro', error.message || 'Falha no cadastro.');
     } finally {
       setLoading(false);
     }
@@ -109,101 +104,169 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({ o
   }
 
   return (
-    <ScrollView className="flex-1 bg-[#f0f0f0] p-5">
-      <Text className="text-2xl font-bold text-[#04378b] text-center mb-8">
-        Cadastro de Participante
-      </Text>
-
-      <View className="mb-5">
-        <TextInput
-          className={`bg-white p-4 rounded-md text-base border ${errors.name ? 'border-red-500' : 'border-[#6e99df]'}`}
-          placeholder="Nome*"
-          value={name}
-          onChangeText={setName}
-        />
-        {errors.name && <Text className="text-red-500 text-sm mt-1">Nome é obrigatório.</Text>}
-      </View>
-
-      <View className="mb-5">
-        <TextInput
-          className={`bg-white p-4 rounded-md text-base border ${errors.email ? 'border-red-500' : 'border-[#6e99df]'}`}
-          placeholder="Email*"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        {errors.email && <Text className="text-red-500 text-sm mt-1">Email é obrigatório.</Text>}
-      </View>
-
-      <View className="mb-5">
-        <TextInput
-          className={`bg-white p-4 rounded-md text-base border ${errors.position ? 'border-red-500' : 'border-[#6e99df]'}`}
-          placeholder="Cargo*"
-          value={position}
-          onChangeText={setPosition}
-        />
-        {errors.position && <Text className="text-red-500 text-sm mt-1">Posição é obrigatória.</Text>}
-      </View>
-
-      <View className="mb-5">
-        <TextInput
-          className={`bg-white p-4 rounded-md text-base border ${errors.contact ? 'border-red-500' : 'border-[#6e99df]'}`}
-          placeholder="Contato*"
-          value={contact}
-          onChangeText={setContact}
-          keyboardType="phone-pad"
-        />
-        {errors.contact && <Text className="text-red-500 text-sm mt-1">Contato é obrigatório.</Text>}
-      </View>
-
-      <View className="mb-5">
-        <TextInput
-          className="bg-white p-4 rounded-md text-base border border-[#6e99df]"
-          placeholder="Nome da Empresa (Opcional)"
-          value={companyName}
-          onChangeText={setCompanyName}
-        />
-      </View>
-
-      <Text className="text-xl font-semibold text-[#04378b] mb-3">
-        Áreas de Especialização*
-      </Text>
-      {errors.selectedAreas && (
-        <Text className="text-red-500 text-sm mb-2">Selecione pelo menos uma área.</Text>
-      )}
-      {areas.map((area) => (
-        <TouchableOpacity
-          key={area.idArea}
-          className="flex-row items-center mb-4"
-          onPress={() => toggleAreaSelection(area.idArea)}
-        >
-          <MaterialIcons
-            name={selectedAreas.includes(area.idArea) ? 'check-box' : 'check-box-outline-blank'}
-            size={24}
-            color="#0056D6"
-          />
-          <Text className="ml-2 text-base text-[#333333]">{area.name}</Text>
-        </TouchableOpacity>
-      ))}
-
-      <TouchableOpacity
-        className={`bg-[#0056D6] p-4 rounded-md items-center mt-8 ${loading ? 'opacity-60' : ''}`}
-        onPress={handleSubmit}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#FFFFFF" />
-        ) : (
-          <Text className="text-white  text-lg font-semibold">Cadastrar</Text>
-        )}
-      </TouchableOpacity>
-
-      <TouchableOpacity className="mt-5 items-center" onPress={onClose}>
-        <Text className="text-[#0056D6] text-base">Fechar</Text>
-      </TouchableOpacity>
-    </ScrollView>
+    <FlatList
+      data={[]}
+      renderItem={null}
+      ListHeaderComponent={
+        <View className="bg-[#f0f0f0] p-5">
+          <Text className="text-2xl font-bold text-[#04378b] text-center mb-8">
+            Cadastro de Participante
+          </Text>
+          {/* Campos do Formulário */}
+          {/* Nome */}
+          <View className="mb-5">
+            <TextInput
+              className={`bg-white p-4 rounded-md text-base border ${
+                errors.name ? 'border-red-500' : 'border-[#6e99df]'
+              }`}
+              placeholder="Nome*"
+              value={name}
+              onChangeText={setName}
+            />
+            {errors.name && <Text className="text-red-500 text-sm mt-1">Nome é obrigatório.</Text>}
+          </View>
+          {/* Email */}
+          <View className="mb-5">
+            <TextInput
+              className={`bg-white p-4 rounded-md text-base border ${
+                errors.email ? 'border-red-500' : 'border-[#6e99df]'
+              }`}
+              placeholder="Email*"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+            {errors.email && <Text className="text-red-500 text-sm mt-1">Email é obrigatório.</Text>}
+          </View>
+          {/* Cargo */}
+          <View className="mb-5">
+            <TextInput
+              className={`bg-white p-4 rounded-md text-base border ${
+                errors.position ? 'border-red-500' : 'border-[#6e99df]'
+              }`}
+              placeholder="Cargo*"
+              value={position}
+              onChangeText={setPosition}
+            />
+            {errors.position && (
+              <Text className="text-red-500 text-sm mt-1">Cargo é obrigatório.</Text>
+            )}
+          </View>
+          <View className="mb-5">
+            <TextInputMask
+              type="custom"
+              options={{
+                mask: '(99) 9 9999-9999',
+              }}
+              style={{
+                backgroundColor: 'white',
+                padding: 16,
+                borderRadius: 8,
+                fontSize: 14,
+                borderWidth: 1,
+                borderColor: errors.contact ? 'red' : '#6e99df',
+              }}
+              placeholder="Contato*"
+              value={contact}
+              onChangeText={setContact}
+              keyboardType="phone-pad"
+            />
+            {errors.contact && (
+              <Text className="text-red-500 text-sm mt-1">Contato é obrigatório.</Text>
+            )}
+          </View>
+          {/* Nome da Empresa */}
+          <View className="mb-5">
+            <TextInput
+              className="bg-white p-4 rounded-md text-base border border-[#6e99df]"
+              placeholder="Nome da Empresa (Opcional)"
+              value={companyName}
+              onChangeText={setCompanyName}
+            />
+          </View>
+          <View className="mb-5">
+            <Text className="text-base font-semibold text-[#04378b] mb-2">
+              Áreas de Especialização*
+            </Text>
+            <MultiSelect
+              items={areas.map((area) => ({ id: area.idArea.toString(), name: area.name }))}
+              uniqueKey="id"
+              onSelectedItemsChange={(selected) => setSelectedAreas(selected.map(Number))}
+              selectedItems={selectedAreas.map(String)}
+              searchInputPlaceholderText="Pesquise áreas"
+              tagRemoveIconColor="#0056D6"
+              tagBorderColor="#0056D6"
+              tagTextColor="#0056D6"
+              selectedItemTextColor="#0056D6"
+              selectedItemIconColor="#0056D6"
+              itemTextColor="#000"
+              displayKey="name"
+              searchInputStyle={{ color: '#0056D6' }}
+              submitButtonColor="#0056D6"
+              submitButtonText="Confirmar"
+              selectText="Selecione as Áreas"
+              selectedText="selecionado(s)" 
+              styleDropdownMenuSubsection={{
+                borderWidth: 1,
+                borderColor: '#6e99df',
+                borderRadius: 5,
+                paddingVertical: 12,
+                paddingHorizontal: 15,
+                backgroundColor: '#fff',
+              }}
+              styleInputGroup={{
+                borderWidth: 1,
+                borderColor: '#6e99df',
+                borderRadius: 5,
+                paddingHorizontal: 15,
+                paddingVertical: 12,
+                backgroundColor: '#fff',
+              }}
+              styleTextDropdown={{
+                color: '#a3a3a3',
+                fontSize: 16,
+                marginLeft: 15,
+              }}
+              styleTextDropdownSelected={{
+                color: '#000',
+                fontSize: 16,
+                marginLeft: 15,
+              }}
+            />
+            {errors.selectedAreas && (
+              <Text className="text-red-500 text-sm mt-1">Selecione pelo menos uma área.</Text>
+            )}
+          </View>
+         
+          <TouchableOpacity
+            className={`bg-[#0056D6] p-4 rounded-md items-center mt-4 ${
+              loading ? 'opacity-60' : ''
+            }`}
+            onPress={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color="#FFFFFF" />
+            ) : (
+              <Text className="text-white text-lg font-semibold">Cadastrar</Text>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            className=" p-4 rounded-md items-center mt-4"
+            onPress={handleClose}
+          >
+            <Text className="text-blue-500 text-lg font-semibold">Fechar</Text>
+          </TouchableOpacity>
+        </View>
+      }
+    />
   );
 };
 
 export default RegisterParticipantScreen;
+
+
+
+
+
