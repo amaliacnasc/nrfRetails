@@ -8,6 +8,7 @@ import {
   FlatList,
 } from 'react-native';
 import MultiSelect from 'react-native-multiple-select';
+import { TextInputMask } from 'react-native-masked-text';
 import { AreaOfExpertiseDTO } from '../interfaces/areaOfExpertiseInterface';
 import { CreateParticipant } from '../interfaces/participantInterface';
 import { createParticipant } from '../services/participantService';
@@ -57,17 +58,19 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
     if (selectedAreas.length === 0) newErrors.selectedAreas = true;
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
-
+  
+    const sanitizedContact = contact.replace(/[^0-9]/g, ''); // Remove caracteres não numéricos
+  
     const participantData: CreateParticipant = {
       name,
       email,
       position,
-      contact,
+      contact: sanitizedContact, // Envia o valor sem formatação
       companyName: companyName || undefined,
       idArea: selectedAreas,
       postPermission: 0,
     };
-
+  
     setLoading(true);
     try {
       await createParticipant(participantData);
@@ -96,8 +99,8 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
 
   return (
     <FlatList
-      data={[]} // Adicionado para resolver o erro
-      renderItem={null} // Adicionado para resolver o erro
+      data={[]}
+      renderItem={null}
       ListHeaderComponent={
         <View className="bg-[#f0f0f0] p-5">
           <Text className="text-2xl font-bold text-[#04378b] text-center mb-8">
@@ -141,15 +144,24 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
             )}
           </View>
           <View className="mb-5">
-            <TextInput
-              className={`bg-white p-4 rounded-md text-base border ${
-                errors.contact ? 'border-red-500' : 'border-[#6e99df]'
-              }`}
-              placeholder="Contato*"
-              value={contact}
-              onChangeText={setContact}
-              keyboardType="phone-pad"
-            />
+          <TextInputMask
+  type="custom"
+  options={{
+    mask: '(99) 9 9999-9999',
+  }}
+  style={{
+    backgroundColor: 'white',
+    padding: 16,
+    borderRadius: 8,
+    fontSize: 14,
+    borderWidth: 1,
+    borderColor: errors.contact ? 'red' : '#6e99df',
+  }}
+  placeholder="Contato*"
+  value={contact}
+  onChangeText={setContact}
+  keyboardType="phone-pad"
+/>
             {errors.contact && (
               <Text className="text-red-500 text-sm mt-1">Contato é obrigatório.</Text>
             )}
@@ -186,11 +198,11 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
               selectedText="selecionado(s)" 
               styleDropdownMenuSubsection={{
                 borderWidth: 1,
-                borderColor: '#6e99df', 
-                borderRadius: 5, 
+                borderColor: '#6e99df',
+                borderRadius: 5,
                 paddingVertical: 12,
                 paddingHorizontal: 15,
-                backgroundColor: '#fff', 
+                backgroundColor: '#fff',
               }}
               styleInputGroup={{
                 borderWidth: 1,
@@ -202,13 +214,13 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
               }}
               styleTextDropdown={{
                 color: '#a3a3a3',
-                fontSize: 16, 
-                marginLeft:15,
+                fontSize: 16,
+                marginLeft: 15,
               }}
               styleTextDropdownSelected={{
                 color: '#000',
                 fontSize: 16,
-                marginLeft:15,
+                marginLeft: 15,
               }}
             />
             {errors.selectedAreas && (
