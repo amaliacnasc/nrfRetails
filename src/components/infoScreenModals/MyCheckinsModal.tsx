@@ -88,12 +88,14 @@ const MyCheckinsModal: React.FC<MyCheckinsModalProps> = ({ visible, onClose }) =
             }
           />
         )}
-        <TouchableOpacity
-          onPress={onClose}
-          className="bg-blue-600 rounded-lg p-4 mt-3 justify-center items-center w-full"
-        >
-          <Text className="text-white text-lg font-bold">Fechar</Text>
-        </TouchableOpacity>
+        <View className="absolute bottom-5 left-0 right-0">
+          <TouchableOpacity
+            onPress={onClose}
+            className="bg-blue-500 p-4 rounded-none w-full justify-center items-center"
+          >
+            <Text className="text-white text-lg font-bold">Fechar</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </Modal>
   );

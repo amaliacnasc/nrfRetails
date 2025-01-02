@@ -50,8 +50,8 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
               </TouchableOpacity>
             </View>
           </View>
-          <View className="absolute bottom-4 w-full px-4">
-            <TouchableOpacity onPress={onClose} className="bg-blue-500 p-4 rounded-lg">
+          <View className="absolute bottom-5 left-0 right-0 px-0">
+            <TouchableOpacity onPress={onClose} className="bg-blue-500 p-4 rounded-none w-full">
               <Text className="text-white text-center text-lg">Fechar</Text>
             </TouchableOpacity>
           </View>
@@ -66,8 +66,8 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
               <FlightInfoCard key={index} date={flight.date} description={flight.description} />
             ))}
           </ScrollView>
-          <View className="absolute bottom-4 w-full px-4">
-            <TouchableOpacity onPress={closeSubModal} className="bg-blue-500 p-4 rounded-lg">
+          <View className="absolute bottom-5 left-0 right-0 px-0">
+            <TouchableOpacity onPress={closeSubModal} className="bg-blue-500 p-4 rounded-none w-full">
               <Text className="text-white text-center text-lg">Fechar</Text>
             </TouchableOpacity>
           </View>
@@ -89,8 +89,8 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
               />
             ))}
           </ScrollView>
-          <View className="absolute bottom-4 w-full px-4">
-            <TouchableOpacity onPress={closeSubModal} className="bg-blue-500 p-4 rounded-lg">
+          <View className="absolute bottom-5 left-0 right-0 px-0">
+            <TouchableOpacity onPress={closeSubModal} className="bg-blue-500 p-4 rounded-none w-full">
               <Text className="text-white text-center text-lg">Fechar</Text>
             </TouchableOpacity>
           </View>
@@ -105,8 +105,8 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
               <TourismInfoCard key={index} title={tourism.title} items={tourism.items} />
             ))}
           </ScrollView>
-          <View className="absolute bottom-4 w-full px-4">
-            <TouchableOpacity onPress={closeSubModal} className="bg-blue-500 p-4 rounded-lg">
+          <View className="absolute bottom-5 left-0 right-0 px-0">
+            <TouchableOpacity onPress={closeSubModal} className="bg-blue-500 p-4 rounded-none w-full">
               <Text className="text-white text-center text-lg">Fechar</Text>
             </TouchableOpacity>
           </View>
