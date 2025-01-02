@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Platform } from 'react-native';
 import { getAllParticipants } from '@/services/participantService';
 import useFormatPhone from '@/hooks/useFormatPhone';
 
@@ -9,7 +9,7 @@ interface ParticipantsModalProps {
 }
 
 const ParticipantsModal: React.FC<ParticipantsModalProps> = ({ visible, onClose }) => {
-  const { formatPhone } = useFormatPhone(); // Usando o hook customizado
+  const { formatPhone } = useFormatPhone();
   const [participants, setParticipants] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -38,28 +38,50 @@ const ParticipantsModal: React.FC<ParticipantsModalProps> = ({ visible, onClose 
       visible={visible}
       onRequestClose={onClose}
     >
-      <View className="flex-1 bg-white">
-        <View className="p-4 border-b border-gray-300">
-          <Text className="text-lg font-bold">Participantes</Text>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: 'white',
+          paddingTop: Platform.OS === 'ios' ? 60 : 20, // Ajuste para iOS e Android
+        }}
+      >
+        <View style={{ padding: 16, borderBottomWidth: 1, borderColor: '#d1d1d1' }}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#000' }}>Participantes</Text>
         </View>
 
         {loading ? (
-          <View className="flex-1 justify-center items-center">
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <ActivityIndicator size="large" color="#0000ff" />
           </View>
         ) : (
-          <ScrollView className="p-4">
+          <ScrollView style={{ padding: 16 }}>
             {participants.map((participant, index) => (
               <View
                 key={index}
-                className="bg-gray-100 p-4 rounded-lg mb-2 shadow"
+                style={{
+                  backgroundColor: '#f3f3f3',
+                  padding: 16,
+                  borderRadius: 8,
+                  marginBottom: 12,
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 3,
+                  elevation: 3,
+                }}
               >
-                <Text className="text-black font-bold">{participant.name}</Text>
-                <Text className="text-gray-500">
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#000' }}>
+                  {participant.name}
+                </Text>
+                <Text style={{ fontSize: 14, color: '#555' }}>
                   Contato: {formatPhone(participant.contact)}
                 </Text>
-                <Text className="text-gray-500">Cargo: {participant.position}</Text>
-                <Text className="text-gray-500">Empresa: {participant.companyName}</Text>
+                <Text style={{ fontSize: 14, color: '#555' }}>
+                  Cargo: {participant.position}
+                </Text>
+                <Text style={{ fontSize: 14, color: '#555' }}>
+                  Empresa: {participant.companyName}
+                </Text>
               </View>
             ))}
           </ScrollView>
@@ -67,9 +89,14 @@ const ParticipantsModal: React.FC<ParticipantsModalProps> = ({ visible, onClose 
 
         <TouchableOpacity
           onPress={onClose}
-          className="p-4 bg-blue-500"
+          style={{
+            padding: 16,
+            backgroundColor: '#0056D6',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
         >
-          <Text className="text-white text-center">Fechar</Text>
+          <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#fff' }}>Fechar</Text>
         </TouchableOpacity>
       </View>
     </Modal>
