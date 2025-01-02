@@ -11,8 +11,6 @@ interface FavoriteEventCardProps {
 export default function FavoriteEventCard({ favorite, onRemoveFavorite }: FavoriteEventCardProps) {
   const { activity } = favorite;
 
-  console.log('Speakers:', activity.speaker);
-
   if (!activity) {
     return null;
   }
@@ -31,7 +29,7 @@ export default function FavoriteEventCard({ favorite, onRemoveFavorite }: Favori
       <View className="flex-row justify-between items-center mb-3">
         <Text className="text-lg font-bold text-gray-800">{activity.title || 'Título não disponível'}</Text>
         <TouchableOpacity onPress={handleRemoveFavorite}>
-          <MaterialCommunityIcons name="bookmark" size={24} color="#0056D6" />
+          <MaterialCommunityIcons name="bookmark-outline" size={24} color="#0056D6" />
         </TouchableOpacity>
       </View>
 
@@ -41,7 +39,7 @@ export default function FavoriteEventCard({ favorite, onRemoveFavorite }: Favori
           <Text className="ml-2 text-sm text-blue-600">{formattedDate}</Text>
         </View>
         <View className="flex-row items-center">
-          <MaterialCommunityIcons name="clock" size={20} color="#0056D6" />
+          <MaterialCommunityIcons name="clock-outline" size={20} color="#0056D6" />
           <Text className="ml-2 text-sm text-blue-600">{formattedTime}</Text>
         </View>
       </View>
@@ -50,7 +48,7 @@ export default function FavoriteEventCard({ favorite, onRemoveFavorite }: Favori
       <Text className="text-sm text-gray-600 mb-3">{description}</Text>
 
       <View className="flex-row items-center mb-3">
-        <MaterialCommunityIcons name="map-marker" size={20} color="#666" />
+        <MaterialCommunityIcons name="map-marker-outline" size={20} color="#666" />
         <Text className="ml-2 text-sm text-gray-600">{location}</Text>
       </View>
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 interface MyCheckinsCardProps {
   eventName: string;
@@ -24,13 +25,18 @@ const MyCheckinsCard: React.FC<MyCheckinsCardProps> = ({ eventName, checkinDateT
   return (
     <View className="bg-white p-6 rounded-lg shadow-lg mb-4">
       <Text className="text-xl font-bold text-gray-800 mb-2">{`Evento: ${eventName}`}</Text>
-      <View className="flex-row align-center items-center mb-2">
-        <Text>Data e Hora do checkin:</Text>
-        <View className="flex-row items-center gap-2">
-          <Text className="text-sm text-gray-600"> {formattedDate}</Text>
-          <Text className="text-sm text-gray-600">{formattedTime}</Text>
-        </View>
-        </View>
+
+      <View className="flex-row items-center mb-3">
+        <MaterialCommunityIcons name="calendar" size={20} color="#0056D6" />
+        <Text className="ml-2 text-sm text-blue-600">Data e Hora do checkin:</Text>
+      </View>
+
+      <View className="flex-row items-center gap-2 mb-3">
+        <MaterialCommunityIcons name="calendar-today" size={20} color="#0056D6" />
+        <Text className="text-sm text-gray-600">{formattedDate}</Text>
+        <MaterialCommunityIcons name="clock-outline" size={20} color="#0056D6" />
+        <Text className="text-sm text-gray-600">{formattedTime}</Text>
+      </View>
     </View>
   );
 };
