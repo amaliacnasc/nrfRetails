@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, View, Text, TouchableOpacity, FlatList, Alert } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, FlatList, ActivityIndicator, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Checkin } from '@/interfaces/checkinInterface';
 import { fetchCheckinsByParticipant } from '@/services/checkinService';
@@ -21,15 +21,13 @@ const MyCheckinsModal: React.FC<MyCheckinsModalProps> = ({ visible, onClose }) =
     try {
       const storedParticipant = await AsyncStorage.getItem('participant');
       if (!storedParticipant) {
-       // Alert.alert('Erro', 'Usuário não encontrado. Faça login novamente.');
         return;
       }
       const participant = JSON.parse(storedParticipant);
       const checkinsData = await fetchCheckinsByParticipant(participant.idParticipant);
       setCheckins(checkinsData);
     } catch (error) {
-      //Alert.alert('Erro', 'Não foi possível carregar seus check-ins.');
-     // console.error('Erro ao carregar check-ins:', error);
+      console.error('Erro ao carregar check-ins:', error);
     } finally {
       setLoading(false);
     }
@@ -49,21 +47,30 @@ const MyCheckinsModal: React.FC<MyCheckinsModalProps> = ({ visible, onClose }) =
           const event = await fetchEventById(checkin.idActivity);
           events[checkin.idActivity] = event.title;
         } catch (error) {
-       //   console.error('Erro ao carregar o nome do evento:', error);
+          console.error('Erro ao carregar o nome do evento:', error);
         }
       }
       setEventNames(events);
     };
 
-    loadEventNames();
+    if (checkins.length > 0) {
+      loadEventNames();
+    }
   }, [checkins]);
 
   return (
-    <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
-      <View className="flex-1 bg-gray-100 p-4">
-        <Text className="text-2xl font-bold text-black mb-4 text-center">Meus Check-ins</Text>
+    <Modal
+      visible={visible}
+      animationType="slide"
+      onRequestClose={onClose}
+    >
+      <View className={`flex-1 bg-gray-100 ${Platform.OS === 'ios' ? 'pt-16' : 'pt-6'} px-4`}>
+        <Text className="text-2xl font-bold text-black text-center mb-4">Meus Check-ins</Text>
         {loading ? (
-          <Text className="text-center text-lg text-gray-600">Carregando check-ins...</Text>
+          <View className="flex-1 justify-center items-center">
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text className="mt-2 text-lg text-gray-600">Carregando check-ins...</Text>
+          </View>
         ) : (
           <FlatList
             data={checkins}
@@ -74,12 +81,21 @@ const MyCheckinsModal: React.FC<MyCheckinsModalProps> = ({ visible, onClose }) =
               />
             )}
             keyExtractor={(item) => item.idCheckin.toString()}
-            ListEmptyComponent={<Text className="text-center text-lg text-gray-600">Você não tem check-ins registrados.</Text>}
+            ListEmptyComponent={
+              <Text className="text-center text-lg text-gray-600">
+                Você não tem check-ins registrados.
+              </Text>
+            }
           />
         )}
-        <TouchableOpacity onPress={onClose} className="bg-blue-600 rounded-lg p-4 mt-6">
-          <Text className="text-white text-center text-lg font-bold">Fechar</Text>
-        </TouchableOpacity>
+        <View className="absolute bottom-5 left-0 right-0">
+          <TouchableOpacity
+            onPress={onClose}
+            className="bg-blue-500 p-4 rounded-none w-full justify-center items-center"
+          >
+            <Text className="text-white text-lg font-bold">Fechar</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </Modal>
   );

@@ -5,7 +5,7 @@ import { Feather } from "@expo/vector-icons";
 import { fetchFavoriteEvents, deleteFavoriteEvent } from "@/services/favoriteService";
 import FavoriteEventCard from "@/components/events/FavoriteEventCard";
 import { useFavorites } from "@/context/FavoritesContext";
-import EventSkeleton from "@/components/events/EventSkeleton"; 
+import EventSkeleton from "@/components/events/EventSkeleton";
 
 export default function FavoriteEventsScreen() {
   const [favorites, setFavorites] = useState<any[]>([]);
@@ -25,10 +25,10 @@ export default function FavoriteEventsScreen() {
             await loadFavorites(participant.idParticipant);
           }
         } else {
-          console.error("Usuário não autenticado. Por favor, faça login novamente.");
+        //  console.error("Usuário não autenticado. Por favor, faça login novamente.");
         }
       } catch (error) {
-        console.error("Erro ao inicializar favoritos:", error);
+      //  console.error("Erro ao inicializar favoritos:", error);
       }
     };
 
@@ -39,11 +39,10 @@ export default function FavoriteEventsScreen() {
     try {
       setLoading(true);
       const fetchedFavorites = await fetchFavoriteEvents(participantId);
-      console.log(fetchedFavorites); 
       setFavorites(fetchedFavorites);
       updateContextFavorites(fetchedFavorites.map((fav) => fav.activity.idActivity));
     } catch (error) {
-      console.error("Erro ao buscar favoritos:", error);
+     // console.error("Erro ao buscar favoritos:", error);
     } finally {
       setLoading(false);
     }
@@ -59,7 +58,15 @@ export default function FavoriteEventsScreen() {
       updateContextFavorites(updatedFavorites.map((fav) => fav.activity.idActivity));
       toggleRefreshFavorites();
     } catch (error) {
-      console.error("Erro ao remover favorito:", error);
+     // console.error("Erro ao remover favorito:", error);
+    }
+  };
+
+  const toggleFavorite = (favorite: any) => {
+    const isCurrentlyFavorited = favorites.some((fav) => fav.idSaveActivity === favorite.idSaveActivity);
+
+    if (isCurrentlyFavorited) {
+      handleRemoveFavorite(favorite);
     }
   };
 
@@ -86,6 +93,8 @@ export default function FavoriteEventsScreen() {
             <FavoriteEventCard
               favorite={item}
               onRemoveFavorite={handleRemoveFavorite}
+              isFavorited={true}
+              onToggleFavorite={() => toggleFavorite(item)}
             />
           )}
           keyExtractor={(item) => item.idSaveActivity.toString()}

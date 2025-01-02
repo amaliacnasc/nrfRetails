@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { Modal, ScrollView, ActivityIndicator, Platform, View, Text, TouchableOpacity } from 'react-native';
 import { getAllParticipants } from '@/services/participantService';
 import useFormatPhone from '@/hooks/useFormatPhone';
 
@@ -9,7 +9,7 @@ interface ParticipantsModalProps {
 }
 
 const ParticipantsModal: React.FC<ParticipantsModalProps> = ({ visible, onClose }) => {
-  const { formatPhone } = useFormatPhone(); // Usando o hook customizado
+  const { formatPhone } = useFormatPhone();
   const [participants, setParticipants] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -32,15 +32,10 @@ const ParticipantsModal: React.FC<ParticipantsModalProps> = ({ visible, onClose 
   };
 
   return (
-    <Modal
-      animationType="slide"
-      transparent={false}
-      visible={visible}
-      onRequestClose={onClose}
-    >
-      <View className="flex-1 bg-white">
+    <Modal animationType="slide" transparent={false} visible={visible} onRequestClose={onClose}>
+      <View className={`flex-1 bg-white ${Platform.OS === 'ios' ? 'pt-16' : 'pt-6'}`}>
         <View className="p-4 border-b border-gray-300">
-          <Text className="text-lg font-bold">Participantes</Text>
+          <Text className="text-xl font-bold text-black">Participantes</Text>
         </View>
 
         {loading ? (
@@ -52,14 +47,12 @@ const ParticipantsModal: React.FC<ParticipantsModalProps> = ({ visible, onClose 
             {participants.map((participant, index) => (
               <View
                 key={index}
-                className="bg-gray-100 p-4 rounded-lg mb-2 shadow"
+                className="bg-gray-100 p-4 rounded-lg mb-4 shadow"
               >
-                <Text className="text-black font-bold">{participant.name}</Text>
-                <Text className="text-gray-500">
-                  Contato: {formatPhone(participant.contact)}
-                </Text>
-                <Text className="text-gray-500">Cargo: {participant.position}</Text>
-                <Text className="text-gray-500">Empresa: {participant.companyName}</Text>
+                <Text className="text-base font-bold text-black">{participant.name}</Text>
+                <Text className="text-sm text-gray-600">Contato: {formatPhone(participant.contact)}</Text>
+                <Text className="text-sm text-gray-600">Cargo: {participant.position}</Text>
+                <Text className="text-sm text-gray-600">Empresa: {participant.companyName}</Text>
               </View>
             ))}
           </ScrollView>
@@ -67,9 +60,9 @@ const ParticipantsModal: React.FC<ParticipantsModalProps> = ({ visible, onClose 
 
         <TouchableOpacity
           onPress={onClose}
-          className="p-4 bg-blue-500"
+          className="bg-blue-500 w-full mb-5 p-4"
         >
-          <Text className="text-white text-center">Fechar</Text>
+          <Text className="text-white text-center text-lg font-bold">Fechar</Text>
         </TouchableOpacity>
       </View>
     </Modal>

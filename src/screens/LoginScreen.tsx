@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   Image,
   View,
+  Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -69,61 +70,80 @@ const LoginScreen: React.FC = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View className="flex-1 bg-white">
-        <View className="absolute top-12 left-0 right-0 flex-row justify-center">
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "white",
+          paddingTop: Platform.OS === "ios" ? 60 : 20, // Diferenciação iOS e Android
+        }}
+      >
+        <View style={{ alignItems: "center", marginBottom: 40 }}>
           <Image
             source={require("../images/Marca NRF 4 1.png")}
-            className="w-[200px] h-[100px]"
-            resizeMode="contain"
+            style={{ width: 200, height: 100, resizeMode: "contain" }}
           />
         </View>
-        <View className="flex-1 justify-center items-stretch px-5 pt-40">
-          <View className="w-full">
-            <View className="mb-5">
-              <Text className="text-base font-semibold text-black mb-1">E-mail</Text>
-              <TextInput
-                className={`w-full h-16 bg-gray-100 p-4 rounded-md border ${
-                  emailError ? "border-red-500" : "border-[#6e99df]"
-                }`}
-                placeholder="Digite seu email"
-                value={email}
-                onChangeText={(text) => {
-                  setEmail(text);
-                  if (text.trim()) {
-                    setEmailError(false);
-                  }
-                }}
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-              {emailError && (
-                <Text className="text-red-500 text-sm mt-1">Email é obrigatório.</Text>
-              )}
-            </View>
-            <TouchableOpacity
-              className={`w-full h-12 bg-[#04378b] justify-center items-center rounded-md ${
-                loading ? "opacity-60" : ""
-              }`}
-              onPress={() => handleLogin()}
-              disabled={loading}
-            >
-              {loading ? (
-                <ActivityIndicator color="#FFFFFF" />
-              ) : (
-                <Text className="text-white text-base font-semibold">Entrar</Text>
-              )}
-            </TouchableOpacity>
-            {loginError && (
-              <Text className="text-red-500 text-sm mt-2 text-center">
-                Falha no login ou na busca de informações do participante.
-              </Text>
+        <View style={{ flex: 1, justifyContent: "center", paddingHorizontal: 20 }}>
+          <View style={{ marginBottom: 20 }}>
+            <Text style={{ fontSize: 16, fontWeight: "bold", color: "#000", marginBottom: 8 }}>
+              E-mail
+            </Text>
+            <TextInput
+              style={{
+                backgroundColor: "#f7f7f7",
+                height: 50,
+                borderRadius: 8,
+                paddingHorizontal: 12,
+                borderColor: emailError ? "red" : "#6e99df",
+                borderWidth: 1,
+                fontSize: 16,
+                color: "#000",
+              }}
+              placeholder="Digite seu email"
+              placeholderTextColor="#a3a3a3"
+              value={email}
+              onChangeText={(text) => {
+                setEmail(text);
+                if (text.trim()) {
+                  setEmailError(false);
+                }
+              }}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+            {emailError && (
+              <Text style={{ color: "red", fontSize: 12, marginTop: 4 }}>Email é obrigatório.</Text>
             )}
-            <TouchableOpacity className="mt-5" onPress={openRegisterModal}>
-              <Text className="text-[#0056D6] text-base text-center">
-                Não possui uma conta? <Text className="font-semibold">Cadastre-se</Text>
-              </Text>
-            </TouchableOpacity>
           </View>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#04378b",
+              height: 50,
+              borderRadius: 8,
+              justifyContent: "center",
+              alignItems: "center",
+              opacity: loading ? 0.6 : 1,
+            }}
+            onPress={() => handleLogin()}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color="#FFFFFF" />
+            ) : (
+              <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>Entrar</Text>
+            )}
+          </TouchableOpacity>
+          {loginError && (
+            <Text style={{ color: "red", fontSize: 14, marginTop: 12, textAlign: "center" }}>
+              Falha no login ou na busca de informações do participante.
+            </Text>
+          )}
+          <TouchableOpacity style={{ marginTop: 16 }} onPress={openRegisterModal}>
+            <Text style={{ color: "#0056D6", fontSize: 14, textAlign: "center" }}>
+              Não possui uma conta?{" "}
+              <Text style={{ fontWeight: "bold" }}>Cadastre-se</Text>
+            </Text>
+          </TouchableOpacity>
         </View>
         <Modal
           visible={isModalVisible}
