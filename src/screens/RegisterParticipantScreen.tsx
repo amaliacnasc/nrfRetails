@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Text,
   TextInput,
@@ -6,13 +6,14 @@ import {
   View,
   ActivityIndicator,
   FlatList,
-} from 'react-native';
-import MultiSelect from 'react-native-multiple-select';
-import { TextInputMask } from 'react-native-masked-text';
-import { AreaOfExpertiseDTO } from '../interfaces/areaOfExpertiseInterface';
-import { CreateParticipant } from '../interfaces/participantInterface';
-import { createParticipant } from '../services/participantService';
-import { getAllAreas } from '@/services/areaService';
+  Platform,
+} from "react-native";
+import MultiSelect from "react-native-multiple-select";
+import { TextInputMask } from "react-native-masked-text";
+import { AreaOfExpertiseDTO } from "../interfaces/areaOfExpertiseInterface";
+import { CreateParticipant } from "../interfaces/participantInterface";
+import { createParticipant } from "../services/participantService";
+import { getAllAreas } from "@/services/areaService";
 
 interface RegisterParticipantScreenProps {
   onClose: () => void;
@@ -23,11 +24,11 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
   onClose,
   onRegisterSuccess,
 }) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [position, setPosition] = useState('');
-  const [contact, setContact] = useState('');
-  const [companyName, setCompanyName] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [position, setPosition] = useState("");
+  const [contact, setContact] = useState("");
+  const [companyName, setCompanyName] = useState("");
   const [areas, setAreas] = useState<AreaOfExpertiseDTO[]>([]);
   const [selectedAreas, setSelectedAreas] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
@@ -50,14 +51,14 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
   };
 
   const handleClose = () => {
-    setName('');
-    setEmail('');
-    setPosition('');
-    setContact('');
-    setCompanyName('');
+    setName("");
+    setEmail("");
+    setPosition("");
+    setContact("");
+    setCompanyName("");
     setSelectedAreas([]);
     setErrors({});
-    onClose(); // Fecha o modal
+    onClose();
   };
 
   const handleSubmit = async () => {
@@ -70,7 +71,7 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
-    const sanitizedContact = contact.replace(/[^0-9]/g, '');
+    const sanitizedContact = contact.replace(/[^0-9]/g, "");
 
     const participantData: CreateParticipant = {
       name,
@@ -85,7 +86,7 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
     setLoading(true);
     try {
       await createParticipant(participantData);
-      handleClose(); // Fecha e limpa os campos ao concluir
+      handleClose();
       onRegisterSuccess(email);
     } catch (error) {
       console.error(error);
@@ -96,9 +97,18 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
 
   if (areasLoading) {
     return (
-      <View className="flex-1 justify-center items-center bg-[#f0f0f0]">
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#f0f0f0",
+        }}
+      >
         <ActivityIndicator size="large" color="#0056D6" />
-        <Text className="mt-2.5 text-base text-[#555555]">Carregando áreas de especialização...</Text>
+        <Text style={{ marginTop: 8, fontSize: 16, color: "#555555" }}>
+          Carregando áreas de especialização...
+        </Text>
       </View>
     );
   }
@@ -108,93 +118,156 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
       data={[]}
       renderItem={null}
       ListHeaderComponent={
-        <View className="bg-[#f0f0f0] p-5">
-          <Text className="text-2xl font-bold text-[#04378b] text-center mb-8">
+        <View
+          style={{
+            backgroundColor: "#f0f0f0",
+            padding: 16,
+            marginTop: Platform.OS === "ios" ? 60 : 20,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 24,
+              fontWeight: "bold",
+              color: "#04378b",
+              textAlign: "center",
+              marginBottom: 16,
+            }}
+          >
             Cadastro de Participante
           </Text>
-          {/* Campos do Formulário */}
-          {/* Nome */}
-          <View className="mb-5">
+          <View style={{ marginBottom: 16 }}>
             <TextInput
-              className={`bg-white p-4 rounded-md text-base border ${
-                errors.name ? 'border-red-500' : 'border-[#6e99df]'
-              }`}
+              style={{
+                backgroundColor: "white",
+                padding: 12,
+                borderRadius: 8,
+                borderWidth: 1,
+                borderColor: errors.name ? "red" : "#6e99df",
+                fontSize: 16,
+                color: "#000",
+              }}
               placeholder="Nome*"
+              placeholderTextColor="#a3a3a3"
               value={name}
               onChangeText={setName}
             />
-            {errors.name && <Text className="text-red-500 text-sm mt-1">Nome é obrigatório.</Text>}
+            {errors.name && (
+              <Text style={{ color: "red", fontSize: 12, marginTop: 4 }}>
+                Nome é obrigatório.
+              </Text>
+            )}
           </View>
-          {/* Email */}
-          <View className="mb-5">
+          <View style={{ marginBottom: 16 }}>
             <TextInput
-              className={`bg-white p-4 rounded-md text-base border ${
-                errors.email ? 'border-red-500' : 'border-[#6e99df]'
-              }`}
+              style={{
+                backgroundColor: "white",
+                padding: 12,
+                borderRadius: 8,
+                borderWidth: 1,
+                borderColor: errors.email ? "red" : "#6e99df",
+                fontSize: 16,
+                color: "#000",
+              }}
               placeholder="Email*"
+              placeholderTextColor="#a3a3a3"
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
               autoCapitalize="none"
             />
-            {errors.email && <Text className="text-red-500 text-sm mt-1">Email é obrigatório.</Text>}
+            {errors.email && (
+              <Text style={{ color: "red", fontSize: 12, marginTop: 4 }}>
+                Email é obrigatório.
+              </Text>
+            )}
           </View>
-          {/* Cargo */}
-          <View className="mb-5">
+          <View style={{ marginBottom: 16 }}>
             <TextInput
-              className={`bg-white p-4 rounded-md text-base border ${
-                errors.position ? 'border-red-500' : 'border-[#6e99df]'
-              }`}
+              style={{
+                backgroundColor: "white",
+                padding: 12,
+                borderRadius: 8,
+                borderWidth: 1,
+                borderColor: errors.position ? "red" : "#6e99df",
+                fontSize: 16,
+                color: "#000",
+              }}
               placeholder="Cargo*"
+              placeholderTextColor="#a3a3a3"
               value={position}
               onChangeText={setPosition}
             />
             {errors.position && (
-              <Text className="text-red-500 text-sm mt-1">Cargo é obrigatório.</Text>
+              <Text style={{ color: "red", fontSize: 12, marginTop: 4 }}>
+                Cargo é obrigatório.
+              </Text>
             )}
           </View>
-          <View className="mb-5">
+          <View style={{ marginBottom: 16 }}>
             <TextInputMask
               type="custom"
-              options={{
-                mask: '(99) 9 9999-9999',
-              }}
+              options={{ mask: "(99) 9 9999-9999" }}
               style={{
-                backgroundColor: 'white',
-                padding: 16,
+                backgroundColor: "white",
+                padding: 12,
                 borderRadius: 8,
-                fontSize: 14,
                 borderWidth: 1,
-                borderColor: errors.contact ? 'red' : '#6e99df',
+                borderColor: errors.contact ? "red" : "#6e99df",
+                fontSize: 16,
+                color: "#000",
               }}
               placeholder="Contato*"
+              placeholderTextColor="#a3a3a3"
               value={contact}
               onChangeText={setContact}
               keyboardType="phone-pad"
             />
             {errors.contact && (
-              <Text className="text-red-500 text-sm mt-1">Contato é obrigatório.</Text>
+              <Text style={{ color: "red", fontSize: 12, marginTop: 4 }}>
+                Contato é obrigatório.
+              </Text>
             )}
           </View>
-          {/* Nome da Empresa */}
-          <View className="mb-5">
+          <View style={{ marginBottom: 16 }}>
             <TextInput
-              className="bg-white p-4 rounded-md text-base border border-[#6e99df]"
+              style={{
+                backgroundColor: "white",
+                padding: 12,
+                borderRadius: 8,
+                borderWidth: 1,
+                borderColor: "#6e99df",
+                fontSize: 16,
+                color: "#000",
+              }}
               placeholder="Nome da Empresa (Opcional)"
+              placeholderTextColor="#a3a3a3"
               value={companyName}
               onChangeText={setCompanyName}
             />
           </View>
-          <View className="mb-5">
-            <Text className="text-base font-semibold text-[#04378b] mb-2">
+          <View style={{ marginBottom: 16 }}>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "bold",
+                color: "#04378b",
+                marginBottom: 8,
+              }}
+            >
               Áreas de Especialização*
             </Text>
             <MultiSelect
-              items={areas.map((area) => ({ id: area.idArea.toString(), name: area.name }))}
+              items={areas.map((area) => ({
+                id: area.idArea.toString(),
+                name: area.name,
+              }))}
               uniqueKey="id"
-              onSelectedItemsChange={(selected) => setSelectedAreas(selected.map(Number))}
+              onSelectedItemsChange={(selected) =>
+                setSelectedAreas(selected.map(Number))
+              }
               selectedItems={selectedAreas.map(String)}
-              searchInputPlaceholderText="Pesquise áreas"
+              searchInputPlaceholderText="Digite para pesquisar" // Corrigido
               tagRemoveIconColor="#0056D6"
               tagBorderColor="#0056D6"
               tagTextColor="#0056D6"
@@ -202,61 +275,78 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
               selectedItemIconColor="#0056D6"
               itemTextColor="#000"
               displayKey="name"
-              searchInputStyle={{ color: '#0056D6' }}
+              searchInputStyle={{ color: "#0056D6" }}
               submitButtonColor="#0056D6"
               submitButtonText="Confirmar"
               selectText="Selecione as Áreas"
-              selectedText="selecionado(s)" 
+              noItemsText="Nenhuma área encontrada"
+              selectedText="selecionado(s)"
               styleDropdownMenuSubsection={{
                 borderWidth: 1,
-                borderColor: '#6e99df',
+                borderColor: "#6e99df",
                 borderRadius: 5,
                 paddingVertical: 12,
                 paddingHorizontal: 15,
-                backgroundColor: '#fff',
+                backgroundColor: "#fff",
               }}
               styleInputGroup={{
                 borderWidth: 1,
-                borderColor: '#6e99df',
+                borderColor: "#6e99df",
                 borderRadius: 5,
                 paddingHorizontal: 15,
                 paddingVertical: 12,
-                backgroundColor: '#fff',
+                backgroundColor: "#fff",
               }}
               styleTextDropdown={{
-                color: '#a3a3a3',
+                color: "#a3a3a3",
                 fontSize: 16,
                 marginLeft: 15,
               }}
               styleTextDropdownSelected={{
-                color: '#000',
+                color: "#000",
                 fontSize: 16,
                 marginLeft: 15,
               }}
             />
             {errors.selectedAreas && (
-              <Text className="text-red-500 text-sm mt-1">Selecione pelo menos uma área.</Text>
+              <Text style={{ color: "red", fontSize: 12, marginTop: 4 }}>
+                Selecione pelo menos uma área.
+              </Text>
             )}
           </View>
-         
           <TouchableOpacity
-            className={`bg-[#0056D6] p-4 rounded-md items-center mt-4 ${
-              loading ? 'opacity-60' : ''
-            }`}
+            style={{
+              backgroundColor: "#0056D6",
+              paddingVertical: 12,
+              borderRadius: 8,
+              alignItems: "center",
+              width: "100%",
+              marginBottom: 16,
+            }}
             onPress={handleSubmit}
             disabled={loading}
           >
             {loading ? (
               <ActivityIndicator color="#FFFFFF" />
             ) : (
-              <Text className="text-white text-lg font-semibold">Cadastrar</Text>
+              <Text
+                style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+              >
+                Cadastrar
+              </Text>
             )}
           </TouchableOpacity>
-          <TouchableOpacity
-            className=" p-4 rounded-md items-center mt-4"
-            onPress={handleClose}
-          >
-            <Text className="text-blue-500 text-lg font-semibold">Fechar</Text>
+          <TouchableOpacity onPress={handleClose}>
+            <Text
+              style={{
+                color: "#0056D6",
+                fontSize: 16,
+                fontWeight: "bold",
+                textAlign: "center",
+              }}
+            >
+              Fechar
+            </Text>
           </TouchableOpacity>
         </View>
       }
@@ -265,8 +355,3 @@ const RegisterParticipantScreen: React.FC<RegisterParticipantScreenProps> = ({
 };
 
 export default RegisterParticipantScreen;
-
-
-
-
-
