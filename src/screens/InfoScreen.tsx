@@ -194,12 +194,9 @@ const InfoScreen: React.FC = () => {
         onClose={() => setModalTravelGuideVisible(false)}
       />
       <EditProfileModal
-        visible={modalVisible}
-        formData={formData}
-        onClose={() => setModalVisible(false)}
-        onSave={handleSave}
-        handleInputChange={handleInputChange}
-      />
+      visible={modalVisible}
+      onClose={() => setModalVisible(false)}
+/>
       <MyCheckinsModal
         visible={modalMyCheckinsVisible}
         onClose={() => setModalMyCheckinsVisible(false)}
