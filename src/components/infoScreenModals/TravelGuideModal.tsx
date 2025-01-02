@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import FlightInfoCard from './FlightInfoCard';
 import HotelInfoCard from './HotelInfoCard';
@@ -12,26 +12,39 @@ interface TravelGuideModalProps {
 }
 
 const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose }) => {
-  const [flightModalVisible, setFlightModalVisible] = useState(false);
-  const [hotelModalVisible, setHotelModalVisible] = useState(false);
-  const [tourismModalVisible, setTourismModalVisible] = useState(false);
+  const [currentSubModal, setCurrentSubModal] = useState<'flight' | 'hotel' | 'tourism' | null>(null);
+
+  const openSubModal = (modalType: 'flight' | 'hotel' | 'tourism') => {
+    setCurrentSubModal(modalType);
+  };
+
+  const closeSubModal = () => {
+    setCurrentSubModal(null);
+  };
+
+  const containerStyle = {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingTop: Platform.OS === 'ios' ? 60 : 20,
+    paddingHorizontal: 16,
+  };
 
   return (
     <>
-      <Modal animationType="slide" transparent={false} visible={visible} onRequestClose={onClose}>
-        <View className="flex-1 bg-white">
+      <Modal animationType="slide" transparent={false} visible={visible && !currentSubModal} onRequestClose={onClose}>
+        <View style={containerStyle}>
           <View className="flex-1 justify-center items-center">
             <Text className="text-2xl font-bold mb-6 text-center">Hospedagem e Transporte</Text>
             <View className="flex-row justify-around w-full">
-              <TouchableOpacity className="items-center" onPress={() => setFlightModalVisible(true)}>
+              <TouchableOpacity className="items-center" onPress={() => openSubModal('flight')}>
                 <MaterialIcons name="flight" size={60} color="black" />
                 <Text className="text-center mt-2 text-lg">Voo</Text>
               </TouchableOpacity>
-              <TouchableOpacity className="items-center" onPress={() => setHotelModalVisible(true)}>
+              <TouchableOpacity className="items-center" onPress={() => openSubModal('hotel')}>
                 <MaterialIcons name="hotel" size={60} color="black" />
                 <Text className="text-center mt-2 text-lg">Hospedagem</Text>
               </TouchableOpacity>
-              <TouchableOpacity className="items-center" onPress={() => setTourismModalVisible(true)}>
+              <TouchableOpacity className="items-center" onPress={() => openSubModal('tourism')}>
                 <MaterialIcons name="directions-car" size={60} color="black" />
                 <Text className="text-center mt-2 text-lg">Turismo</Text>
               </TouchableOpacity>
@@ -45,13 +58,8 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
         </View>
       </Modal>
 
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={flightModalVisible}
-        onRequestClose={() => setFlightModalVisible(false)}
-      >
-        <View className="flex-1 bg-white">
+      <Modal animationType="slide" transparent={false} visible={currentSubModal === 'flight'} onRequestClose={closeSubModal}>
+        <View style={containerStyle}>
           <Text className="text-2xl font-bold mb-4 text-center mt-4">Informações sobre Voos</Text>
           <ScrollView className="flex-1 p-4">
             {flightInfoData.map((flight, index) => (
@@ -59,20 +67,15 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
             ))}
           </ScrollView>
           <View className="absolute bottom-4 w-full px-4">
-            <TouchableOpacity onPress={() => setFlightModalVisible(false)} className="bg-blue-500 p-4 rounded-lg">
+            <TouchableOpacity onPress={closeSubModal} className="bg-blue-500 p-4 rounded-lg">
               <Text className="text-white text-center text-lg">Fechar</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
 
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={hotelModalVisible}
-        onRequestClose={() => setHotelModalVisible(false)}
-      >
-        <View className="flex-1 bg-white">
+      <Modal animationType="slide" transparent={false} visible={currentSubModal === 'hotel'} onRequestClose={closeSubModal}>
+        <View style={containerStyle}>
           <Text className="text-2xl font-bold mb-4 text-center mt-4">Informações sobre Hospedagem</Text>
           <ScrollView className="flex-1 p-4">
             {hotelInfoData.map((hotel, index) => (
@@ -87,20 +90,15 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
             ))}
           </ScrollView>
           <View className="absolute bottom-4 w-full px-4">
-            <TouchableOpacity onPress={() => setHotelModalVisible(false)} className="bg-blue-500 p-4 rounded-lg">
+            <TouchableOpacity onPress={closeSubModal} className="bg-blue-500 p-4 rounded-lg">
               <Text className="text-white text-center text-lg">Fechar</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
 
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={tourismModalVisible}
-        onRequestClose={() => setTourismModalVisible(false)}
-      >
-        <View className="flex-1 bg-white">
+      <Modal animationType="slide" transparent={false} visible={currentSubModal === 'tourism'} onRequestClose={closeSubModal}>
+        <View style={containerStyle}>
           <Text className="text-2xl font-bold mb-4 text-center mt-4">Informações sobre Turismo</Text>
           <ScrollView className="flex-1 p-4">
             {tourismInfoData.map((tourism, index) => (
@@ -108,7 +106,7 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
             ))}
           </ScrollView>
           <View className="absolute bottom-4 w-full px-4">
-            <TouchableOpacity onPress={() => setTourismModalVisible(false)} className="bg-blue-500 p-4 rounded-lg">
+            <TouchableOpacity onPress={closeSubModal} className="bg-blue-500 p-4 rounded-lg">
               <Text className="text-white text-center text-lg">Fechar</Text>
             </TouchableOpacity>
           </View>

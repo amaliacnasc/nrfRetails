@@ -13,7 +13,7 @@ const TourismInfoCard: React.FC<TourismInfoCardProps> = ({ title, items }) => {
       style={{
         padding: 16,
         marginBottom: 16,
-        marginTop: Platform.OS === 'ios' ? 12 : 8, // Margem superior diferenciada
+        marginTop: Platform.OS === 'ios' ? 12 : 8,
       }}
     >
       <Text className="text-lg font-semibold text-gray-800 mb-2">{title}</Text>
