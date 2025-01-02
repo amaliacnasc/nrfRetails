@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal, View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { getAllParticipants } from '@/services/participantService';
 import { Participant } from '@/interfaces/participantInterface';
+import useFormatPhone from '@/hooks/useFormatPhone';
 
 interface ContactModalProps {
   visible: boolean;
@@ -9,6 +10,7 @@ interface ContactModalProps {
 }
 
 const ContactModal: React.FC<ContactModalProps> = ({ visible, onClose }) => {
+  const { formatPhone } = useFormatPhone();
   const [contacts, setContacts] = useState<Participant[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -29,15 +31,6 @@ const ContactModal: React.FC<ContactModalProps> = ({ visible, onClose }) => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const formatPhone = (phone: string): string => {
-    if (!phone) return 'N/A';
-    const cleaned = phone.replace(/\D/g, '');
-    if (cleaned.length === 11) {
-      return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 3)} ${cleaned.slice(3, 7)}-${cleaned.slice(7)}`;
-    }
-    return phone;
   };
 
   return (

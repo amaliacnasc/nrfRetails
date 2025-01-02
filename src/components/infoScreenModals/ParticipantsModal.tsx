@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { getAllParticipants } from '@/services/participantService';
+import useFormatPhone from '@/hooks/useFormatPhone';
 
 interface ParticipantsModalProps {
   visible: boolean;
@@ -8,6 +9,7 @@ interface ParticipantsModalProps {
 }
 
 const ParticipantsModal: React.FC<ParticipantsModalProps> = ({ visible, onClose }) => {
+  const { formatPhone } = useFormatPhone(); // Usando o hook customizado
   const [participants, setParticipants] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -32,7 +34,7 @@ const ParticipantsModal: React.FC<ParticipantsModalProps> = ({ visible, onClose 
   return (
     <Modal
       animationType="slide"
-      transparent={false} // Define como não transparente para ocupar 100% da tela
+      transparent={false}
       visible={visible}
       onRequestClose={onClose}
     >
@@ -53,8 +55,10 @@ const ParticipantsModal: React.FC<ParticipantsModalProps> = ({ visible, onClose 
                 className="bg-gray-100 p-4 rounded-lg mb-2 shadow"
               >
                 <Text className="text-black font-bold">{participant.name}</Text>
+                <Text className="text-gray-500">
+                  Contato: {formatPhone(participant.contact)}
+                </Text>
                 <Text className="text-gray-500">Cargo: {participant.position}</Text>
-                <Text className="text-gray-500">Contato: {participant.contact}</Text>
                 <Text className="text-gray-500">Empresa: {participant.companyName}</Text>
               </View>
             ))}
