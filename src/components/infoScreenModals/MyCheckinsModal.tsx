@@ -21,15 +21,15 @@ const MyCheckinsModal: React.FC<MyCheckinsModalProps> = ({ visible, onClose }) =
     try {
       const storedParticipant = await AsyncStorage.getItem('participant');
       if (!storedParticipant) {
-        Alert.alert('Erro', 'Usuário não encontrado. Faça login novamente.');
+       // Alert.alert('Erro', 'Usuário não encontrado. Faça login novamente.');
         return;
       }
       const participant = JSON.parse(storedParticipant);
       const checkinsData = await fetchCheckinsByParticipant(participant.idParticipant);
       setCheckins(checkinsData);
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível carregar seus check-ins.');
-      console.error('Erro ao carregar check-ins:', error);
+      //Alert.alert('Erro', 'Não foi possível carregar seus check-ins.');
+     // console.error('Erro ao carregar check-ins:', error);
     } finally {
       setLoading(false);
     }
@@ -49,7 +49,7 @@ const MyCheckinsModal: React.FC<MyCheckinsModalProps> = ({ visible, onClose }) =
           const event = await fetchEventById(checkin.idActivity);
           events[checkin.idActivity] = event.title;
         } catch (error) {
-          console.error('Erro ao carregar o nome do evento:', error);
+       //   console.error('Erro ao carregar o nome do evento:', error);
         }
       }
       setEventNames(events);

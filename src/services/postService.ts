@@ -20,8 +20,8 @@ export const createPost = async (newPost: FormData): Promise<Post> => {
     });
     return response.data;
   } catch (error) {
+     console.error('Erro ao criar post:', error);
     if (DEBUG_MODE) {
-      // console.error('Erro ao criar post:', error);
     }
     throw error;
   }

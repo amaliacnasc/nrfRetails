@@ -31,7 +31,7 @@ const PostScreen: React.FC = () => {
         setCanPost(false);
       }
     } catch (error) {
-      console.error('Erro ao verificar permissão:', error);
+      //console.error('Erro ao verificar permissão:', error);
       setCanPost(false);
     }
   };
