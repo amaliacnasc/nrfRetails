@@ -4,7 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import FlightInfoCard from './FlightInfoCard';
 import HotelInfoCard from './HotelInfoCard';
 import TourismInfoCard from './TourismInfoCard';
-import { flightInfoData, hotelInfoData, tourismInfoData } from '../../mocks/travelGuideMocks';
+
 
 interface TravelGuideModalProps {
   visible: boolean;
@@ -62,9 +62,9 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
         <View style={containerStyle}>
           <Text className="text-2xl font-bold mb-4 text-center mt-4">Informações sobre Voos</Text>
           <ScrollView className="flex-1 p-4">
-            {flightInfoData.map((flight, index) => (
-              <FlightInfoCard key={index} date={flight.date} description={flight.description} />
-            ))}
+            
+              <FlightInfoCard />
+          
           </ScrollView>
           <View className="absolute bottom-5 left-0 right-0 px-0">
             <TouchableOpacity onPress={closeSubModal} className="bg-blue-500 p-4 rounded-none w-full">
@@ -78,16 +78,9 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
         <View style={containerStyle}>
           <Text className="text-2xl font-bold mb-4 text-center mt-4">Informações sobre Hospedagem</Text>
           <ScrollView className="flex-1 p-4">
-            {hotelInfoData.map((hotel, index) => (
-              <HotelInfoCard
-                key={index}
-                hotelName={hotel.hotelName}
-                address={hotel.address}
-                checkIn={hotel.checkIn}
-                checkOut={hotel.checkOut}
-                services={hotel.services}
-              />
-            ))}
+           
+              <HotelInfoCard />
+            
           </ScrollView>
           <View className="absolute bottom-5 left-0 right-0 px-0">
             <TouchableOpacity onPress={closeSubModal} className="bg-blue-500 p-4 rounded-none w-full">
@@ -101,9 +94,9 @@ const TravelGuideModal: React.FC<TravelGuideModalProps> = ({ visible, onClose })
         <View style={containerStyle}>
           <Text className="text-2xl font-bold mb-4 text-center mt-4">Informações sobre Turismo</Text>
           <ScrollView className="flex-1 p-4">
-            {tourismInfoData.map((tourism, index) => (
-              <TourismInfoCard key={index} title={tourism.title} items={tourism.items} />
-            ))}
+            
+              <TourismInfoCard />
+            
           </ScrollView>
           <View className="absolute bottom-5 left-0 right-0 px-0">
             <TouchableOpacity onPress={closeSubModal} className="bg-blue-500 p-4 rounded-none w-full">

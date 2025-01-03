@@ -32,20 +32,29 @@ export const getAllParticipants = async (): Promise<any[]> => {
   }
 };
 
-export const updateParticipant = async (data: CreateParticipant): Promise<void> => {
+
+export const updateParticipant = async (data: Participant): Promise<void> => {
   try {
-    await api.post('/appevento/participants', data); 
+    const { idParticipant, ...updateData } = data;
+
+    if (!idParticipant) {
+      throw new Error("O ID do participante é obrigatório para a atualização.");
+    }
+
+    // Envia os dados de atualização para o backend
+    await api.put(`/appevento/participants/${idParticipant}`, updateData);
+
     if (DEBUG_MODE) {
-      console.log('Participante criado/atualizado com sucesso:', data);
+      console.log("Participante atualizado com sucesso:", data);
     }
   } catch (error) {
     if (DEBUG_MODE) {
-      console.error('Erro ao criar/atualizar participante:', error);
+      console.error("Erro ao atualizar participante:", error);
     }
     throw error;
   }
- 
-}; export const createParticipant = async (data: CreateParticipant): Promise<void> => {
+};
+export const createParticipant = async (data: CreateParticipant): Promise<void> => {
   try {
     const response = await api.post('/appevento/participants', data);
     if (DEBUG_MODE) {
