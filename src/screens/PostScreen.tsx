@@ -4,49 +4,52 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Post } from '@/interfaces/postInterface';
 import { HeaderTimeline } from '@/components/timeline/HeaderTimeline';
 import { fetchPosts } from '@/services/postService';
-import FetchPosts from '@/components/timeline/PostList';
+import PostList from '@/components/timeline/PostList';
 import CreatePostModal from '@/components/timeline/CreatePostModal';
+import PostSkeleton from '@/components/timeline/PostSkeleton'; 
 
 const PostScreen: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [canPost, setCanPost] = useState<boolean | null>(null);
+  const [idParticipant, setIdParticipant] = useState<number | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const loadPosts = async () => {
+    setLoading(true);
     try {
       const fetchedPosts = await fetchPosts();
       setPosts(fetchedPosts);
     } catch (error) {
       console.error('Erro ao carregar posts:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const checkPostPermission = async () => {
+  const fetchParticipantId = async () => {
     try {
-      const storedData = await AsyncStorage.getItem('participant');
-      if (storedData) {
-        const parsedData = JSON.parse(storedData);
-        setCanPost(parsedData.postPermission === 1);
+      const storedParticipant = await AsyncStorage.getItem('participant');
+      if (storedParticipant) {
+        const participant = JSON.parse(storedParticipant);
+        setIdParticipant(participant.idParticipant);
+        setCanPost(participant.postPermission === 1);
       } else {
         setCanPost(false);
       }
     } catch (error) {
-      //console.error('Erro ao verificar permissão:', error);
+      console.error('Erro ao buscar participante:', error);
       setCanPost(false);
     }
   };
 
   useEffect(() => {
     loadPosts();
-    checkPostPermission();
+    fetchParticipantId();
   }, []);
 
-  if (canPost === null) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Carregando...</Text>
-      </View>
-    );
+  if (canPost === null || loading) {
+    return <PostSkeleton />;
   }
 
   return (
@@ -76,7 +79,14 @@ const PostScreen: React.FC = () => {
         </Pressable>
       )}
 
-      <FetchPosts posts={posts} setPosts={setPosts} />
+      <PostList
+        posts={posts}
+        setPosts={setPosts}
+        onRefresh={loadPosts}
+        idParticipant={idParticipant}
+        loading={loading} 
+      />
+
       <CreatePostModal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
