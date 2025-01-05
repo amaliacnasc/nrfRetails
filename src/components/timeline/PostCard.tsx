@@ -68,8 +68,8 @@ const PostCard: React.FC<PostCardProps> = ({ post, likedByUser }) => {
   return (
     <View className="mb-5 bg-white rounded-lg shadow-md overflow-hidden">
       {post.imageUrl && (
-        <Image source={{ uri: post.imageUrl }} className="w-full h-52" />
-      )}
+      <Image source={{ uri: post.imageUrl }} className="w-full h-[300px]" />
+    )}
       <View className="p-4 relative">
         <Text className="text-gray-800 font-bold text-lg mb-2">
           {expanded || post.description.length <= MAX_DESCRIPTION_LENGTH
