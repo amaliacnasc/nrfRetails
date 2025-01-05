@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome5'; // Atualizado para FontAwesome5
 
 const HotelInfoCard: React.FC = () => {
   const hotelInfo = {
@@ -9,8 +9,8 @@ const HotelInfoCard: React.FC = () => {
     checkIn: "14h00",
     checkOut: "12h00",
     services: [
-      { name: "Academia", icon: "dumbbell" },
-      { name: "Restaurante e Bar", icon: "cutlery" },
+      { name: "Academia", icon: "dumbbell" }, // Suportado no FontAwesome5
+      { name: "Restaurante e Bar", icon: "utensils" },
       { name: "Equipe Multilíngue", icon: "globe" },
       { name: "Programa Infantil 'Ask Alfred'", icon: "child" },
       { name: "Wi-Fi Cortesia", icon: "wifi" },
